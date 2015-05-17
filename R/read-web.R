@@ -19,3 +19,16 @@ read_web <- function(web = get_web_root()) {
   ) %>%
     structure(class = "rpkgweb")
 }
+
+#' @export
+format.rpkgweb <- function(x, ...) {
+  c(
+    paste("A package web consisting of", length(x), "package(s):"),
+    paste("-", paste(lapply(x, `[[`, "package"), collapse = ", "))
+  )
+}
+
+#' @export
+print.rpkgweb <- function(x, ...) {
+  cat(paste(format(x), collapse = "\n"), "\n")
+}
