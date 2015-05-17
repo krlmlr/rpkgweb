@@ -1,9 +1,10 @@
 #' Read a package web
 #'
-#' This function reads
+#' This function reads a web of packages.
 #'
 #' @importFrom stats setNames
-#' @importFrom magrittr `%>%`
+#' @importFrom magrittr %>%
+#' @importFrom devtools as.package
 #' @export
 read_web <- function(web = get_web_root()) {
   dirs <-
@@ -15,5 +16,6 @@ read_web <- function(web = get_web_root()) {
   lapply(
     dirs %>% setNames(., basename(.)),
     devtools::as.package
-  )
+  ) %>%
+    structure(class = "rpkgweb")
 }

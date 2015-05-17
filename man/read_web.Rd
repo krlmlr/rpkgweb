@@ -7,6 +7,6 @@
 read_web(web = get_web_root())
 }
 \description{
-This function reads
+This function reads a web of packages.
 }
 
