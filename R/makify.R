@@ -35,5 +35,20 @@ combine_targets <- function(targets) {
 
 create_make_rule <- function(target, deps, space = NULL) {
   dep_rule <- paste0(target, ": ", combine_targets(deps))
-  c(dep_rule, space)
+  structure(c(dep_rule, space), class = "Makefile")
+}
+
+#' @export
+format.Makefile <- function(x, ...) {
+  paste(x, collapse = "\n")
+}
+
+#' @export
+print.Makefile <- function(x, ...) {
+  cat(format(x), "\n")
+}
+
+#' @export
+c.Makefile <- function(...) {
+  barf
 }
