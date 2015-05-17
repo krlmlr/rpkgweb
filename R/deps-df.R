@@ -26,7 +26,7 @@ deps_df.rpkgweb <- function(web) {
     SIMPLIFY = FALSE) %>%
     bind_rows %>%
     group_by(package, dep_type) %>%
-    do(parse_deps(.$deps %>% debug_pipe)[, "name", drop = FALSE]) %>%
+    do(parse_deps(.$deps)[, "name", drop = FALSE]) %>%
     ungroup %>%
     prepend_class("deps_df")
 }
