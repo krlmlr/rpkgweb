@@ -28,27 +28,3 @@ makify.rpkgweb <- function(x) {
 makify.deps_df <- function(x) {
   mapply(x$package, x$name, FUN = create_make_rule)
 }
-
-combine_targets <- function(targets) {
-  paste(targets, collapse = " ")
-}
-
-create_make_rule <- function(target, deps, space = NULL) {
-  dep_rule <- paste0(target, ": ", combine_targets(deps))
-  structure(c(dep_rule, space), class = "Makefile")
-}
-
-#' @export
-format.Makefile <- function(x, ...) {
-  paste(x, collapse = "\n")
-}
-
-#' @export
-print.Makefile <- function(x, ...) {
-  cat(format(x), "\n")
-}
-
-#' @export
-c.Makefile <- function(...) {
-  barf
-}
