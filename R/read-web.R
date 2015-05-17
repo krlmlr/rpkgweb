@@ -15,7 +15,7 @@ read_web <- function(web = get_web_root()) {
 
   lapply(
     dirs %>% setNames(., basename(.)),
-    devtools::as.package
+    as.package
   ) %>%
     structure(class = "rpkgweb")
 }
