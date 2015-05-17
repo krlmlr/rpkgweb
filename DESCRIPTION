@@ -1,10 +1,10 @@
 Package: rpkgweb
-Title: What the Package Does (one line, title case)
+Title: Managing webs of R packages
 Version: 0.0-0
 Authors@R: as.person("Kirill Müller <krlmlr+r@mailbox.org> [aut, cre]")
-Description: What the package does (one paragraph)
+Description: This package helps managing projects that consist of multiple
+  individual R packages.
 Depends: R (>= 3.2.0)
 License: GPL-3
 LazyData: true
 Encoding: UTF-8
-GitHub: https://github.com/krlmlr/
