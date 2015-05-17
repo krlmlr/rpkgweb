@@ -12,7 +12,7 @@ deps_df.default <- function(web) {
 }
 
 #' @export
-#' @importFrom dplyr bind_rows group_by do
+#' @importFrom dplyr bind_rows group_by do ungroup
 #' @importFrom devtools parse_deps
 deps_df.rpkgweb <- function(web) {
   web %>%
@@ -26,5 +26,6 @@ deps_df.rpkgweb <- function(web) {
     SIMPLIFY = FALSE) %>%
     bind_rows %>%
     group_by(package, dep_type) %>%
-    do(parse_deps(.$deps %>% debug_pipe)[, "name", drop = FALSE])
+    do(parse_deps(.$deps %>% debug_pipe)[, "name", drop = FALSE]) %>%
+    ungroup
 }
