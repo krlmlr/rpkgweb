@@ -1,4 +1,4 @@
-Package: BB
+Package: BBB
 Title: What the Package Does (one line, title case)
 Version: 0.0-0
 Authors@R: as.person("Kirill Müller <krlmlr+r@mailbox.org> [aut, cre]")

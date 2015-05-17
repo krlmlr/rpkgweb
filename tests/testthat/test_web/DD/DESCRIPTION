@@ -7,5 +7,5 @@ Depends: R (>= 3.2.0)
 License: GPL-3
 LazyData: true
 Encoding: UTF-8
-Imports: BB
+Imports: BBB
 Suggests: CC
