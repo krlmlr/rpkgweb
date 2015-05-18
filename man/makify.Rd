@@ -4,14 +4,15 @@
 \alias{makify}
 \title{Construct a Makefile}
 \usage{
-makify(x)
+makify(makefile, y)
 }
 \arguments{
-\item{x}{The object to construct the \code{Makefile} for}
+\item{makefile}{A Makefile as created by \code{\link[MakefileR]{create_makefile}}}
+
+\item{y}{The object to construct the \code{Makefile} for}
 }
 \value{
-A character vector that represents the contents of the generated
-\code{Makefile}
+A Makefile
 }
 \description{
 This function constructs a \code{Makefile} for various objects.
