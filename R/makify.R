@@ -20,7 +20,7 @@ makify.rpkgweb <- function(makefile, y) {
   makefile %>%
     append_make_rule("all", y %>% names) %>%
     append_make_rule(".FORCE") %>%
-    append_make_rule(y %>% names, ".FORCE") %>%
+    append_make_rule(y %>% names, ".FORCE", "Rscript -e \"rpkgweb::check_up('$@')\"") %>%
     makify(y %>% deps_df)
 }
 
