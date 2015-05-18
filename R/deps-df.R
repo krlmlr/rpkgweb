@@ -28,6 +28,7 @@ deps_df.rpkgweb <- function(web) {
     group_by(package, dep_type) %>%
     do(parse_deps(.$deps)[, "name", drop = FALSE]) %>%
     ungroup %>%
+    filter(name %in% package) %>%
     prepend_class("deps_df")
 }
 
