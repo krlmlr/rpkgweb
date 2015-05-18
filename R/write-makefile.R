@@ -15,7 +15,9 @@ write_makefile <- function(web = get_web_root()) {
     format
 
   makefile_name <- file.path(web, "Makefile")
-  if (!isTRUE(all.equal(makefile_text, readLines(makefile_name)))) {
+  old_makefile_text <- if (file.exists(makefile_name)) readLines(makefile_name)
+
+  if (!isTRUE(all.equal(makefile_text, old_makefile_text))) {
     writeLines(makefile_text, makefile_name)
   } else {
     message("Contents of ", makefile_name, " unchanged.")
