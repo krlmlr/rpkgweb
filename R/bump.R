@@ -21,7 +21,7 @@ bump <- function(pkg, component = 2L, format = "0.0-0") {
 
   ("devtools" %:::% "write_dcf")(desc_path, desc)
   message("Package ", pkg$package, " bumped to version ", desc$Version)
-  invisible(NULL)
+  invisible(desc$Version)
 }
 
 increase_version <- function(version, component, format) {
