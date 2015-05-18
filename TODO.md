@@ -1,0 +1,8 @@
+- Integration with rbundler and packrat
+- How is a package web defined?
+    - Special entry in a DESCRIPTION file
+    - Special file
+    - Configuration?
+- Easier way to bump (via Makefile?)
+- Dependency graph
+- Faster initialization (perhaps avoid loading devtools until check phase)
