@@ -24,6 +24,9 @@ bump <- function(pkg, component = 2L, format = "0.0-0") {
   invisible(desc$Version)
 }
 
+# Minimum number of version components
+.MIN_COMPONENTS <- 2L
+
 increase_version <- function(version, component, format) {
   sprintf_format <- get_sprintf_format(format, component)
 
@@ -32,7 +35,7 @@ increase_version <- function(version, component, format) {
     strsplit("[.-]") %>%
     extract2(1L) %>%
     sapply(as.integer) %>%
-    extract(seq_len(component))
+    extract(seq_len(max(component, .MIN_COMPONENTS)))
 
   version[is.na(version)] <- 0L
   version[[component]] <- version[[component]] + 1L
@@ -50,7 +53,8 @@ get_sprintf_format <- function(format, component) {
   if (format_split_len_diff < 0L) {
     format_split <- c(format_split, rep(".", -format_split_len_diff))
   } else {
-    format_split <- format_split[seq_len(component_split_len)]
+    format_split <- format_split[seq_len(max(component_split_len,
+                                             .MIN_COMPONENTS - 1L))]
   }
 
   paste(c("", format_split, ""), collapse = "%s")
