@@ -9,19 +9,26 @@
 #' @param pkg Location of package
 #' @export
 check_up <- function(pkg) {
-  installed <- as.package(find.package(pkg))
+  pkg_path <- find.package(pkg, quiet = TRUE)
+  installed <- if (length(pkg_path) > 0L) {
+    as.package(pkg_path)
+  } else {
+    NULL
+  }
 
   available <- read_web() %>%
     extract2(pkg)
 
-  cmp <- compareVersion(installed$version, available$version)
+  cmp <- compareVersion(installed$version %||% "", available$version)
   if (cmp == 0) {
     message("Package ", pkg, " is up to date: ", available$version)
-    return()
+    return(invisible(NULL))
   }
 
   devtools::check(available$path)
   devtools::install(available$path)
   message("Package ", pkg, " updated: ", available$version)
-  invisible(NULL)
+  return(invisible(NULL))
 }
+
+"%||%" <- function(a, b) if (!is.null(a)) a else b
