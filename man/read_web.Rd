@@ -6,6 +6,9 @@
 \usage{
 read_web(web = get_web_root())
 }
+\arguments{
+\item{web}{A directory within a package web}
+}
 \description{
 This function reads a web of packages.
 }

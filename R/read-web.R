@@ -2,6 +2,8 @@
 #'
 #' This function reads a web of packages.
 #'
+#' @param web A directory within a package web
+#'
 #' @importFrom stats setNames
 #' @importFrom magrittr %>%
 #' @importFrom devtools as.package
