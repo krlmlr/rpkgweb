@@ -8,9 +8,16 @@
 #' @importFrom MakefileR create_makefile
 #' @export
 write_makefile <- function(web = get_web_root()) {
-  web %>%
+  makefile_text <-
+    web %>%
     read_web %>%
     makify(create_makefile(), .) %>%
-    format %>%
-    writeLines(file.path(web, "Makefile"))
+    format
+
+  makefile_name <- file.path(web, "Makefile")
+  if (!isTRUE(all.equal(makefile_text, readLines(makefile_name)))) {
+    writeLines(makefile_text, makefile_name)
+  } else {
+    message("Contents of ", makefile_name, " unchanged.")
+  }
 }
