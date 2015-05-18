@@ -42,6 +42,7 @@ increase_version <- function(version, component, format) {
   do.call(sprintf, c(list(sprintf_format), version))
 }
 
+#' @importFrom magrittr %>% extract2
 get_sprintf_format <- function(format, component) {
   format_split <- format %>%
     strsplit("0", fixed = TRUE) %>%

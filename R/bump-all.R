@@ -8,7 +8,7 @@
 #' @inheritParams bump
 #'
 #' @importFrom devtools as.package
-#' @importFrom magrittr %>% extract
+#' @importFrom magrittr %>% extract extract2
 #' @importFrom dplyr mutate filter left_join arrange do
 #' @importFrom igraph as.igraph vertex graph.bfs graph.union graph.empty set.vertex.attribute
 #' @export

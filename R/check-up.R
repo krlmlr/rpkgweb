@@ -5,7 +5,7 @@
 #' and installs it if all checks succeed.
 #'
 #' @importFrom devtools as.package
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% extract2
 #' @param pkg Location of package
 #' @export
 check_up <- function(pkg) {
