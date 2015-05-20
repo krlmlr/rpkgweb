@@ -10,7 +10,8 @@
 #' @importFrom devtools as.package
 #' @importFrom magrittr %>% extract extract2
 #' @importFrom dplyr mutate filter left_join arrange do
-#' @importFrom igraph as.igraph vertex graph.bfs graph.union graph.empty set.vertex.attribute
+#' @importFrom igraph as.igraph vertex graph.bfs graph.union graph.empty
+#'   get.vertex.attribute set.vertex.attribute
 #' @export
 bump_all <- function(pkg, web = get_web_root(), component = 2L, format = "0.0-0") {
   pkg <- as.package(pkg)
