@@ -4,7 +4,7 @@
 \alias{bump}
 \title{Bump package version}
 \usage{
-bump(pkg, component = 2L, format = "0.0-0")
+bump(pkg = ".", component = 2L, format = "0.0-0")
 }
 \arguments{
 \item{pkg}{Location of package}

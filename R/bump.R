@@ -8,7 +8,7 @@
 #'
 #' @importFrom magrittr %>% extract
 #' @export
-bump <- function(pkg, component = 2L, format = "0.0-0") {
+bump <- function(pkg = ".", component = 2L, format = "0.0-0") {
   pkg <- devtools::as.package(pkg)
 
   desc_path <- file.path(pkg$path, "DESCRIPTION")
