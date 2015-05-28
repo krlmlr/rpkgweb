@@ -12,13 +12,13 @@ bump <- function(pkg = ".", component = 2L, format = "0.0-0") {
   pkg <- as.package(pkg)
 
   desc_path <- file.path(pkg$path, "DESCRIPTION")
-  desc <- ("devtools" %:::% "read_dcf")(desc_path)
+  desc <- read_dcf(desc_path)
 
   desc$Version <-
     desc$Version %>%
     increase_version(component, format)
 
-  ("devtools" %:::% "write_dcf")(desc_path, desc)
+  write_dcf(desc_path, desc)
   message("Package ", pkg$package, " bumped to version ", desc$Version)
   invisible(desc$Version)
 }
