@@ -70,12 +70,10 @@ write_dcf <- function(path, desc) {
   # Add back in continuation characters
   desc <- gsub("\n[ \t]*\n", "\n .\n ", desc, perl = TRUE, useBytes = TRUE)
   desc <- gsub("\n \\.([^\n])", "\n  .\\1", desc, perl = TRUE, useBytes = TRUE)
+  desc <- gsub("^([^\n])", " \\1", desc, perl = TRUE, useBytes = TRUE)
 
-  text <- paste0(names(desc), ": ", desc, collapse = "\n")
-
-  if (substr(text, nchar(text), 1) != "\n") {
-    text <- paste0(text, "\n")
-  }
+  text <- paste0(names(desc), ":", desc, collapse = "\n")
+  text <- gsub("\n*$", "\n", text, perl = TRUE, useBytes = TRUE)
 
   cat(text, file = path)
 }
