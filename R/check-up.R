@@ -28,7 +28,7 @@ check_up <- function(pkg, webroot = get_web_root()) {
             ", now installing ", available$version)
   }
 
-  devtools::check(pkg$available, cran = FALSE)
+  ##devtools::check(available, cran = FALSE)
 
   depth_df <- get_dep_depth_df(pkg %>% as.package, web)
   pkgs_to_remove <-
