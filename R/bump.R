@@ -6,11 +6,10 @@
 #' @inheritParams check_up
 #' @param component The position of the version to increase, starting at 1.
 #'
-#' @importFrom devtools as.package
 #' @importFrom magrittr %>% extract
 #' @export
 bump <- function(pkg, component = 2L, format = "0.0-0") {
-  pkg <- as.package(pkg)
+  pkg <- devtools::as.package(pkg)
 
   desc_path <- file.path(pkg$path, "DESCRIPTION")
   desc <- ("devtools" %:::% "read_dcf")(desc_path)

@@ -4,11 +4,51 @@
 #' from the locally available version, this function checks the package
 #' and installs it if all checks succeed.
 #'
-#' @importFrom devtools as.package
 #' @importFrom magrittr %>% extract2
 #' @param pkg Location of package
 #' @export
-check_up <- function(pkg) {
+check_up <- function(pkg, webroot = get_web_root()) {
+  web <- webroot %>%
+    read_web()
+  available <- web %>%
+    extract2(pkg)
+
+  installed_version <- get_installed_version(pkg)
+
+  cmp <- compareVersion(installed_version, available$version)
+  if (cmp == 0) {
+    message("Package ", pkg, " is up to date: ", available$version)
+    return(invisible(NULL))
+  }
+
+  if (installed_version == "") {
+    message("Package ", pkg, " not yet installed.")
+  } else {
+    message("Package ", pkg, " installed in version ", installed_version,
+            ", now installing ", available$version)
+  }
+
+  depth_df <- get_dep_depth_df(pkg %>% as.package, web)
+  pkgs_to_remove <-
+    depth_df$package %>%
+    find.package(quiet = TRUE) %>%
+    basename
+
+  if (length(pkgs_to_remove) > 0) {
+    message("Removing packages: ", paste(pkgs_to_remove, collapse = ", "))
+    remove.packages(pkgs_to_remove)
+  }
+
+  devtools::RCMD("INSTALL", c("--no-multiarch", "--with-keep.source", "--install-tests", shQuote(available$path)))
+  #devtools::install(available$path, build_vignettes = TRUE)
+  if (compareVersion(get_installed_version(pkg), available$version) != 0) {
+    stop("Package ", pkg, " not updated")
+  }
+  message("Package ", pkg, " ", "updated", ": ", available$version)
+  return(invisible(NULL))
+}
+
+get_installed_version <- function(pkg) {
   pkg_path <- find.package(pkg, quiet = TRUE)
   installed <- if (length(pkg_path) > 0L) {
     as.package(pkg_path)
@@ -16,19 +56,7 @@ check_up <- function(pkg) {
     NULL
   }
 
-  available <- read_web() %>%
-    extract2(pkg)
-
-  cmp <- compareVersion(installed$version %||% "", available$version)
-  if (cmp == 0) {
-    message("Package ", pkg, " is up to date: ", available$version)
-    return(invisible(NULL))
-  }
-
-  devtools::check(available$path)
-  devtools::install(available$path)
-  message("Package ", pkg, " updated: ", available$version)
-  return(invisible(NULL))
+  installed$version %||% ""
 }
 
 "%||%" <- function(a, b) if (!is.null(a)) a else b

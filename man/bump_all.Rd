@@ -4,7 +4,7 @@
 \alias{bump_all}
 \title{Bump package version and all dependent versions}
 \usage{
-bump_all(pkg, web = get_web_root(), component = 2L, format = "0.0-0")
+bump_all(pkg, webroot = get_web_root(), component = 2L, format = "0.0-0")
 }
 \arguments{
 \item{pkg}{Location of package}

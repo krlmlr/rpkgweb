@@ -7,16 +7,34 @@
 #' @inheritParams check_up
 #' @inheritParams bump
 #'
-#' @importFrom devtools as.package
 #' @importFrom magrittr %>% extract extract2
-#' @importFrom dplyr mutate filter left_join arrange do
 #' @importFrom igraph as.igraph vertex graph.bfs graph.union graph.empty
 #'   get.vertex.attribute set.vertex.attribute
 #' @export
-bump_all <- function(pkg, web = get_web_root(), component = 2L, format = "0.0-0") {
+bump_all <- function(pkg, webroot = get_web_root(), component = 2L, format = "0.0-0") {
   pkg <- as.package(pkg)
+  web <- read_web(webroot)
+
+  dep_depth <- get_dep_depth_df(pkg, web)
+
+  dep_depth %>%
+    dplyr::arrange(depth) %>%
+    dplyr::group_by(packages) %>%
+    dplyr::do(
+      new_version = bump(.$package, component = component + .$depth, format = format)
+    ) %>%
+    dplyr::ungroup %>%
+    invisible
+}
+
+#' @importFrom igraph graph.data.frame
+#' @export
+as.igraph.deps_df <- function(x, ...) {
+  graph.data.frame(x[c("name", "package", "dep_type")])
+}
+
+get_dep_depth_df <- function(pkg, web) {
   deps <- web %>%
-    read_web %>%
     deps_df
 
   deps_igraph <-
@@ -32,20 +50,7 @@ bump_all <- function(pkg, web = get_web_root(), component = 2L, format = "0.0-0"
   packages <- deps_igraph %>%
     get.vertex.attribute("name") %>%
     extract(!is.nan(graph_dep_dist))
-  components <- component + graph_dep_dist[!is.nan(graph_dep_dist)]
+  depth <- graph_dep_dist[!is.nan(graph_dep_dist)]
 
-  data.frame(packages, components) %>%
-    arrange(components) %>%
-    group_by(packages) %>%
-    do(
-      new_version = bump(.$package, component = .$component, format = format)
-    ) %>%
-    ungroup %>%
-    invisible
-}
-
-#' @importFrom igraph graph.data.frame
-#' @export
-as.igraph.deps_df <- function(x, ...) {
-  graph.data.frame(x[c("name", "package", "dep_type")])
+  data.frame(packages, depth)
 }
