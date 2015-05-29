@@ -41,8 +41,9 @@ check_up <- function(pkg, webroot = get_web_root()) {
     remove.packages(pkgs_to_remove)
   }
 
-  devtools::RCMD("INSTALL", c("--no-multiarch", "--with-keep.source", "--install-tests", shQuote(available$path)))
-  #devtools::install(available$path, build_vignettes = TRUE)
+
+  devtools::install(available, args = "--no-test-load")
+
   if (compareVersion(get_installed_version(pkg), available$version) != 0) {
     stop("Package ", pkg, " not updated")
   }
