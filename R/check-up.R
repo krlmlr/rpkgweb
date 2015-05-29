@@ -41,6 +41,16 @@ check_up <- function(pkg, webroot = get_web_root()) {
     remove.packages(pkgs_to_remove)
   }
 
+  if (devtools:::uses_testthat(available)) {
+    test_res <- devtools::test(available)
+    test_res_df <- as.data.frame(test_res)
+    if (any(test_res_df[["error"]])) {
+      stop("Error in tests for package ", available$package)
+    }
+    if (any(test_res_df[["failed"]] > 0L)) {
+      stop("Tests failed for package ", available$package)
+    }
+  }
 
   devtools::install(available, args = "--no-test-load")
 
