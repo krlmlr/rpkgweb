@@ -13,20 +13,25 @@ deps_df.default <- function(web) {
 
 #' @export
 deps_df.rpkgweb <- function(web) {
-  web %>%
+  all_deps <-
+    web %>%
     lapply(names) %>%
     lapply(intersect, c("depends", "imports", "suggests")) %>%
     mapply(web, FUN = function(names, webitem) {
-      data.frame(package = webitem$package, dep_type = names,
-                 deps = unname(unlist(webitem[names])),
-                 stringsAsFactors = FALSE)
+      if (length(names) > 0) {
+        data.frame(package = webitem$package, dep_type = names,
+                   deps = unname(unlist(webitem[names])),
+                   stringsAsFactors = FALSE)
+      }
     },
-    SIMPLIFY = FALSE) %>%
+    SIMPLIFY = FALSE)
+
+  all_deps %>%
     dplyr::bind_rows() %>%
     dplyr::group_by(package, dep_type) %>%
     dplyr::do(parse_deps(.$deps)[, "name", drop = FALSE]) %>%
     dplyr::ungroup() %>%
-    dplyr::filter(name %in% package) %>%
+    dplyr::filter(name %in% names(all_deps)) %>%
     prepend_class("deps_df")
 }
 
