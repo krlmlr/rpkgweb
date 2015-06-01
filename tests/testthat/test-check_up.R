@@ -12,12 +12,20 @@ test_that("check_up acceptance test", {
       local({
         web <- rpkgweb()
 
+        on.exit({
+          for (n in names(web$packages)) {
+            if (n %in% loadedNamespaces()) devtools::unload(n)
+          }
+        }, add = TRUE)
+
         for (n in names(web$packages)) {
           expect_true(check_up(n, web, quiet = TRUE), info = n)
+          if (n %in% loadedNamespaces()) devtools::unload(n)
         }
 
         for (n in names(web$packages)) {
           expect_false(check_up(n, web, quiet = TRUE), info = n)
+          if (n %in% loadedNamespaces()) devtools::unload(n)
         }
 
         local({
@@ -29,6 +37,7 @@ test_that("check_up acceptance test", {
                          lib_dir)
           expect_error(check_up(web$packages[[1]]$package, web, quiet = TRUE),
                          "thisWillTriggerAnError")
+          devtools::unload(web$packages[[1]]$package)
 
           for (n in names(web$packages)[-1:-2]) {
             expect_error(check_up(n, web, quiet = TRUE), "Command failed", info = n)
