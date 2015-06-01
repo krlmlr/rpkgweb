@@ -13,7 +13,7 @@ test_that("creation of Makefile", {
 
       res <- system2("make", "-n", stdout = TRUE, stderr = TRUE)
       expect_true(any(grepl("unchanged", res)))
-      for (n in names(web)) {
+      for (n in names(web$packages)) {
         expect_true(any(grepl(sprintf("check_up.*%s", n), res)), label = n)
       }
     })

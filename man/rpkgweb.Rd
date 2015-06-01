@@ -6,14 +6,14 @@
 \alias{rpkgweb}
 \title{Read a package web}
 \usage{
-rpkgweb(web_root = get_web_root())
+rpkgweb(root_dir = get_web_root())
 
 is.rpkgweb(x)
 
 as.rpkgweb(x)
 }
 \arguments{
-\item{web_root}{The root directory of the package web}
+\item{root_dir}{The root directory of the package web}
 
 \item{x}{An object}
 }

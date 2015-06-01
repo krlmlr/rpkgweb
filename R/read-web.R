@@ -2,24 +2,28 @@
 #'
 #' This function reads a web of packages.
 #'
-#' @param web_root The root directory of the package web
+#' @param root_dir The root directory of the package web
 #' @param x An object
 #'
 #' @importFrom stats setNames
 #' @importFrom magrittr %>%
 #' @export
-rpkgweb <- function(web_root = get_web_root()) {
+rpkgweb <- function(root_dir = get_web_root()) {
   dirs <-
-    dir(path = web_root, include.dirs = TRUE, full.names = TRUE) %>%
+    dir(path = root_dir, include.dirs = TRUE, full.names = TRUE) %>%
     file.info %>%
     subset(isdir) %>%
     row.names
 
-  lapply(
-    dirs %>% setNames(., basename(.)),
-    as.package
-  ) %>%
-    structure(class = "rpkgweb")
+  structure(
+    list(
+      packages = lapply(
+        dirs %>% setNames(., basename(.)),
+        as.package
+      ),
+      root_dir = root_dir
+    ),
+    class = "rpkgweb")
 }
 
 #' @rdname rpkgweb
@@ -46,8 +50,9 @@ as.rpkgweb.character <- function(x) {
 #' @export
 format.rpkgweb <- function(x, ...) {
   c(
-    paste("A package web consisting of", length(x), "package(s):"),
-    paste("-", paste(lapply(x, `[[`, "package"), collapse = ", "))
+    paste("A package web rooted at", x$root_dir, "consisting of",
+          length(x$packages), "package(s):"),
+    paste("-", paste(lapply(x$packages, `[[`, "package"), collapse = ", "))
   )
 }
 

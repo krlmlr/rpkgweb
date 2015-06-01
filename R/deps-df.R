@@ -14,10 +14,10 @@ deps_df.default <- function(web) {
 #' @export
 deps_df.rpkgweb <- function(web) {
   all_deps <-
-    web %>%
+    web$packages %>%
     lapply(names) %>%
     lapply(intersect, c("depends", "imports", "suggests")) %>%
-    mapply(web, FUN = function(names, webitem) {
+    mapply(web$packages, FUN = function(names, webitem) {
       if (length(names) > 0) {
         data.frame(package = webitem$package, dep_type = names,
                    deps = unname(unlist(webitem[names])),

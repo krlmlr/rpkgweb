@@ -19,13 +19,13 @@ makify.default <- function(makefile, y) {
 makify.rpkgweb <- function(makefile, y) {
   makefile %>%
     append_make_def("R_USER_LIBRARY", .libPaths()[[1L]]) %>%
-    append_make_rule("all", y %>% names) %>%
+    append_make_rule("all", y$packages %>% names) %>%
     append_make_rule(".FORCE") %>%
     append_make_rule("Makefile", ".FORCE", "Rscript -e \"rpkgweb::write_makefile()\"") %>%
     append_make_rule(lib_desc_path("%"), code_desc_path("%"),
                      c("Rscript -e \"rpkgweb::check_up('$(patsubst %/,%,$(dir $<))')\"",
                        "touch $@")) %>%
-    Reduce(y %>% names, ., f = function(m, x)
+    Reduce(y$packages %>% names, ., f = function(m, x)
       append_make_rule(m, x, lib_desc_path(x))) %>%
     makify(y %>% deps_df)
 }

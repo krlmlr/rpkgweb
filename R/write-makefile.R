@@ -13,7 +13,7 @@ write_makefile <- function(web = rpkgweb()) {
     makify(create_makefile(), .) %>%
     format
 
-  makefile_name <- file.path(web, "Makefile")
+  makefile_name <- file.path(web$root_dir, "Makefile")
   old_makefile_text <- if (file.exists(makefile_name)) readLines(makefile_name)
 
   if (!isTRUE(all.equal(makefile_text, old_makefile_text))) {
