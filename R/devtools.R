@@ -13,6 +13,7 @@
 ## Changes:
 ## - Don't export symbols
 ## - Reimplement check_dir using rprojroot package
+## - Remove unused functions
 
 #' Coerce input to a package.
 #'
@@ -102,34 +103,4 @@ parse_deps <- function(string) {
 
   # Remove R dependency
   deps[names != "R", ]
-}
-
-
-#' Check that the version of an imported package satisfies the requirements
-#'
-#' @param dep_name The name of the package with objects to import
-#' @param dep_ver The version of the package
-#' @param dep_compare The comparison operator to use to check the version
-#' @keywords internal
-check_dep_version <- function(dep_name, dep_ver = NA, dep_compare = NA) {
-  if (!requireNamespace(dep_name, quietly = TRUE)) {
-    stop("Dependency package ", dep_name, " not available.")
-  }
-
-  if (xor(is.na(dep_ver), is.na(dep_compare))) {
-    stop("dep_ver and dep_compare must be both NA or both non-NA")
-
-  } else if(!is.na(dep_ver) && !is.na(dep_compare)) {
-
-    compare <- match.fun(dep_compare)
-    if (!compare(
-      as.numeric_version(getNamespaceVersion(dep_name)),
-      as.numeric_version(dep_ver))) {
-
-      warning("Need ", dep_name, " ", dep_compare,
-        " ", dep_ver,
-        " but loaded version is ", getNamespaceVersion(dep_name))
-    }
-  }
-  return(TRUE)
 }
