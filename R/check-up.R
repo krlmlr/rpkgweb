@@ -4,15 +4,14 @@
 #' from the locally available version, this function checks the package
 #' and installs it if all checks succeed.
 #'
-#' @importFrom magrittr %>% extract2
+#' @importFrom magrittr %>%
 #' @importFrom devtools as.package
 #' @param pkg Location of package
 #' @export
 check_up <- function(pkg, web = rpkgweb()) {
   web <- as.rpkgweb(web)
 
-  available <- web %>%
-    extract2(pkg)
+  available <- web$packages[[pkg]]
 
   installed_version <- get_installed_version(pkg)
 
