@@ -9,6 +9,10 @@
 ##
 ## Copyright RStudio, Inc.; licensed under GPL v2, license text under
 ## http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt .
+##
+## Changes:
+## - Don't export symbols
+## - Reimplement check_dir using rprojroot package
 
 #' Coerce input to a package.
 #'
@@ -18,7 +22,6 @@
 #'   \item package object
 #' }
 #' @param x object to coerce to a package
-#' @export
 #' @keywords internal
 as.package <- function(x = NULL) {
   if (is.package(x)) return(x)
@@ -27,55 +30,9 @@ as.package <- function(x = NULL) {
   load_pkg_description(x)
 }
 
-
+#' @importFrom rprojroot find_root is_r_package
 check_dir <- function(x) {
-  if (is.null(x)) {
-    stop("Path is null", call. = FALSE)
-  }
-
-  # Normalise path and strip trailing slashes
-  x <- normalise_path(x)
-  x <- package_root(x) %||% x
-
-  if (!file.exists(x)) {
-    stop("Can't find directory ", x, call. = FALSE)
-  }
-  if (!file.info(x)$isdir) {
-    stop(x, " is not a directory", call. = FALSE)
-  }
-
-  x
-}
-
-package_root <- function(path) {
-  if (is.package(path)) {
-    return(path$path)
-  }
-  stopifnot(is.character(path))
-
-  has_description <- function(path) {
-    file.exists(file.path(path, 'DESCRIPTION'))
-  }
-  path <- normalizePath(path, mustWork = FALSE)
-  while (!has_description(path) && !is_root(path)) {
-    path <- dirname(path)
-  }
-
-  if (is_root(path)) {
-    NULL
-  } else {
-    path
-  }
-}
-
-is_root <- function(path) {
-  identical(path, dirname(path))
-}
-
-normalise_path <- function(x) {
-  x <- sub("\\\\+$", "/", x)
-  x <- sub("/*$", "", x)
-  x
+  find_root(is_r_package, path = path)
 }
 
 # Load package DESCRIPTION into convenient form.
@@ -98,7 +55,6 @@ load_pkg_description <- function(path) {
 #' Is the object a package?
 #'
 #' @keywords internal
-#' @export
 is.package <- function(x) inherits(x, "package")
 
 
@@ -110,7 +66,6 @@ is.package <- function(x) inherits(x, "package")
 #'   and \code{version} package versions. If version is not specified,
 #'   it will be stored as NA.
 #' @keywords internal
-#' @export
 #' @examples
 #' parse_deps("httr (< 2.1),\nRCurl (>= 3)")
 #' # only package dependencies are returned
