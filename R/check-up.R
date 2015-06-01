@@ -57,7 +57,8 @@ check_up <- function(pkg, web = rpkgweb(), quiet = FALSE) {
     }
   }
 
-  devtools::install(available, args = "--no-test-load", quiet = quiet)
+  devtools::install(available, dependencies = FALSE,
+                    args = "--no-test-load", quiet = quiet)
 
   if (compareVersion(get_installed_version(pkg), available$version) != 0) {
     stop("Package ", pkg, " not updated")
