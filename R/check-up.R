@@ -47,14 +47,7 @@ check_up <- function(pkg, web = rpkgweb(), quiet = FALSE) {
   }
 
   if (devtools:::uses_testthat(available)) {
-    test_res <- devtools::test(available, quiet = quiet)
-    test_res_df <- as.data.frame(test_res)
-    if (any(test_res_df[["error"]])) {
-      stop("Error in tests for package ", available$package)
-    }
-    if (any(test_res_df[["failed"]] > 0L)) {
-      stop("Tests failed for package ", available$package)
-    }
+    devtools::test(available, quiet = quiet, reporter = "stop")
   }
 
   devtools::install(available, dependencies = FALSE,
