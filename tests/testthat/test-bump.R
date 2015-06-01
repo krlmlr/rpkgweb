@@ -1,7 +1,5 @@
 context("bump")
 
-library(magrittr)
-
 test_that("formatting", {
   expect_equal(get_sprintf_format("0.0", 2), "%s.%s")
   expect_equal(get_sprintf_format("0.0-0", 2), "%s.%s")
