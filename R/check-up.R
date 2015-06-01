@@ -12,6 +12,8 @@
 check_up <- function(pkg, web = rpkgweb(), quiet = FALSE) {
   web <- as.rpkgweb(web)
 
+  if (quiet) message <- function(...) invisible(NULL)
+
   available <- web$packages[[pkg]]
 
   installed_version <- get_installed_version(pkg)
