@@ -1,6 +1,6 @@
 context("check_up")
 
-local({
+test_that("check_up acceptance test", {
   lib_dir <- normalizePath(".lib", mustWork = FALSE)
   dir.create(lib_dir)
   on.exit(unlink(lib_dir, recursive = TRUE, force = TRUE), add = TRUE)
