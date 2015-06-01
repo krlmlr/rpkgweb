@@ -3,6 +3,7 @@
 #' This function increases the given component of the version number
 #' in the DESCRIPTION file of a package.
 #'
+#' @inheritParams devtools::install
 #' @inheritParams check_up
 #' @param component The position of the version to increase, starting at 1.
 #'

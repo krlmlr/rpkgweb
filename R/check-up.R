@@ -1,25 +1,29 @@
 #' Check and install package if required
 #'
 #' If the currently installed version of a package differs
-#' from the locally available version, this function checks the package
-#' and installs it if all checks succeed.
+#' from the locally available version, this function uninstalls all reverse
+#' dependencies, checks the package and installs it if all checks succeed.
 #'
-#' @importFrom magrittr %>% extract2
+#' @inheritParams devtools::install
+#' @return \code{TRUE} if package has been updated, \code{FALSE} if the package
+#'   is already up to date, or an error if there was a failure
+#'
+#' @importFrom magrittr %>%
 #' @importFrom devtools as.package
-#' @param pkg Location of package
 #' @export
-check_up <- function(pkg, web = rpkgweb()) {
+check_up <- function(pkg, web = rpkgweb(), quiet = FALSE) {
   web <- as.rpkgweb(web)
 
-  available <- web %>%
-    extract2(pkg)
+  if (quiet) message <- function(...) invisible(NULL)
+
+  available <- web$packages[[pkg]]
 
   installed_version <- get_installed_version(pkg)
 
   cmp <- compareVersion(installed_version, available$version)
   if (cmp == 0) {
     message("Package ", pkg, " is up to date: ", available$version)
-    return(invisible(NULL))
+    return(invisible(FALSE))
   }
 
   if (installed_version == "") {
@@ -39,27 +43,21 @@ check_up <- function(pkg, web = rpkgweb()) {
 
   if (length(pkgs_to_remove) > 0) {
     message("Removing packages: ", paste(pkgs_to_remove, collapse = ", "))
-    remove.packages(pkgs_to_remove)
+    remove.packages(pkgs_to_remove, .libPaths()[[1L]])
   }
 
   if (devtools:::uses_testthat(available)) {
-    test_res <- devtools::test(available)
-    test_res_df <- as.data.frame(test_res)
-    if (any(test_res_df[["error"]])) {
-      stop("Error in tests for package ", available$package)
-    }
-    if (any(test_res_df[["failed"]] > 0L)) {
-      stop("Tests failed for package ", available$package)
-    }
+    devtools::test(available, quiet = quiet, reporter = "stop")
   }
 
-  devtools::install(available, args = "--no-test-load")
+  devtools::install(available, dependencies = FALSE,
+                    args = "--no-test-load", quiet = quiet)
 
   if (compareVersion(get_installed_version(pkg), available$version) != 0) {
     stop("Package ", pkg, " not updated")
   }
   message("Package ", pkg, " ", "updated", ": ", available$version)
-  return(invisible(NULL))
+  return(invisible(TRUE))
 }
 
 #' @importFrom devtools as.package
