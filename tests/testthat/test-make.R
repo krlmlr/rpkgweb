@@ -4,9 +4,9 @@ test_that("creation of Makefile", {
   devtools::in_dir(
     "test_web",
     local({
-      web <- read_web()
+      web <- rpkgweb()
 
-      write_makefile()
+      write_makefile(web)
       on.exit(file.remove("Makefile"), add = TRUE)
 
       expect_message(write_makefile(), "unchanged")

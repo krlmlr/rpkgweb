@@ -14,6 +14,8 @@ as.rpkgweb(x)
 }
 \arguments{
 \item{web_root}{The root directory of the package web}
+
+\item{x}{An object}
 }
 \description{
 This function reads a web of packages.
