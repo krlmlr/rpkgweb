@@ -11,6 +11,7 @@ deps_df.default <- function(web) {
   stop("Need object of class rpkgweb")
 }
 
+#' @importFrom devtools parse_deps
 #' @export
 deps_df.rpkgweb <- function(web) {
   all_deps <-
