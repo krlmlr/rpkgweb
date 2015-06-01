@@ -5,6 +5,7 @@
 #' and installs it if all checks succeed.
 #'
 #' @importFrom magrittr %>% extract2
+#' @importFrom devtools as.package
 #' @param pkg Location of package
 #' @export
 check_up <- function(pkg, web = rpkgweb()) {
@@ -61,6 +62,7 @@ check_up <- function(pkg, web = rpkgweb()) {
   return(invisible(NULL))
 }
 
+#' @importFrom devtools as.package
 get_installed_version <- function(pkg) {
   pkg_path <- find.package(pkg, quiet = TRUE)
   installed <- if (length(pkg_path) > 0L) {
