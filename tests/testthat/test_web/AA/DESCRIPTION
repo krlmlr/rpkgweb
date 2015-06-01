@@ -6,3 +6,4 @@ Description: What the package does (one paragraph)
 License: GPL-3
 LazyData: true
 Encoding: UTF-8
+Suggests: testthat

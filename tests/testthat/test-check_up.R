@@ -28,7 +28,7 @@ local({
           expect_message(devtools::uninstall(web$packages[[1]], quiet = TRUE),
                          lib_dir)
           expect_error(check_up(web$packages[[1]]$package, web, quiet = TRUE),
-                         "Command failed")
+                         "thisWillTriggerAnError")
 
           for (n in names(web$packages)[-1:-2]) {
             expect_error(check_up(n, web, quiet = TRUE), "Command failed", info = n)
