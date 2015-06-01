@@ -43,7 +43,7 @@ check_up <- function(pkg, web = rpkgweb(), quiet = FALSE) {
 
   if (length(pkgs_to_remove) > 0) {
     message("Removing packages: ", paste(pkgs_to_remove, collapse = ", "))
-    remove.packages(pkgs_to_remove)
+    remove.packages(pkgs_to_remove, .libPaths()[[1L]])
   }
 
   if (devtools:::uses_testthat(available)) {
