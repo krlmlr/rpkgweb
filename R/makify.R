@@ -21,13 +21,23 @@ makify.rpkgweb <- function(makefile, y) {
     append_make_rule("all", y %>% names) %>%
     append_make_rule(".FORCE") %>%
     append_make_rule("Makefile", ".FORCE", "Rscript -e \"rpkgweb::write_makefile()\"") %>%
-    append_make_rule(y %>% names, ".FORCE", "Rscript -e \"rpkgweb::check_up('$@')\"") %>%
+    Reduce(y %>% names, ., f = function(m, x)
+      append_make_rule(m, x, lib_desc_path(x))) %>%
+    Reduce(y %>% names, ., f = function(m, x)
+      append_make_rule(m, lib_desc_path(x), code_desc_path(x),
+                       c("Rscript -e \"rpkgweb::check_up('$(patsubst %/,%,$(dir $<))')\"",
+                         "touch $@"))) %>%
     makify(y %>% deps_df)
 }
 
 #' @importFrom MakefileR create_make_rule
 #' @export
 makify.deps_df <- function(makefile, y) {
-  rules <- mapply(y$package, y$name, FUN = create_make_rule, SIMPLIFY = FALSE)
+  rules <- mapply(y$package %>% lib_desc_path,
+                  y$name %>% lib_desc_path,
+                  FUN = create_make_rule, SIMPLIFY = FALSE)
   Reduce(c, rules, init = makefile)
 }
+
+lib_desc_path <- . %>% file.path(.libPaths()[[1L]], ., "DESCRIPTION")
+code_desc_path <- . %>% file.path(., "DESCRIPTION")
