@@ -27,12 +27,22 @@ deps_df.rpkgweb <- function(web) {
     },
     SIMPLIFY = FALSE)
 
-  all_deps <- do.call(rbind, all_deps)
+  all_deps_df <- do.call(rbind, all_deps)
 
-  all_deps %>%
-    dplyr::group_by(package, dep_type) %>%
-    dplyr::do(parse_deps(.$deps)[, "name", drop = FALSE]) %>%
-    dplyr::ungroup() %>%
+  lapply(
+    seq_len(nrow(all_deps_df)),
+    function(i) {
+      name <- parse_deps(all_deps_df$deps[[i]])$name
+      if (length(name) > 0) {
+        data.frame(package = all_deps_df$package[[i]],
+                             dep_type = all_deps_df$dep_type[[i]],
+                             name = name)
+      } else {
+        NULL
+      }
+    }
+  ) %>%
+    do.call(rbind, .) %>%
     dplyr::filter(name %in% names(all_deps)) %>%
     prepend_class("deps_df")
 }
