@@ -4,11 +4,13 @@
 #' from the locally available version, this function checks the package
 #' and installs it if all checks succeed.
 #'
+#' @inheritParams devtools::install
+#'
 #' @importFrom magrittr %>%
 #' @importFrom devtools as.package
 #' @param pkg Location of package
 #' @export
-check_up <- function(pkg, web = rpkgweb()) {
+check_up <- function(pkg, web = rpkgweb(), quiet = FALSE) {
   web <- as.rpkgweb(web)
 
   available <- web$packages[[pkg]]
@@ -42,7 +44,7 @@ check_up <- function(pkg, web = rpkgweb()) {
   }
 
   if (devtools:::uses_testthat(available)) {
-    test_res <- devtools::test(available)
+    test_res <- devtools::test(available, quiet = quiet)
     test_res_df <- as.data.frame(test_res)
     if (any(test_res_df[["error"]])) {
       stop("Error in tests for package ", available$package)
@@ -52,7 +54,7 @@ check_up <- function(pkg, web = rpkgweb()) {
     }
   }
 
-  devtools::install(available, args = "--no-test-load")
+  devtools::install(available, args = "--no-test-load", quiet = quiet)
 
   if (compareVersion(get_installed_version(pkg), available$version) != 0) {
     stop("Package ", pkg, " not updated")

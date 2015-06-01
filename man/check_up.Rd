@@ -4,10 +4,12 @@
 \alias{check_up}
 \title{Check and install package if required}
 \usage{
-check_up(pkg, web = rpkgweb())
+check_up(pkg, web = rpkgweb(), quiet = FALSE)
 }
 \arguments{
 \item{pkg}{Location of package}
+
+\item{quiet}{if \code{TRUE} suppresses output from this function.}
 }
 \description{
 If the currently installed version of a package differs
