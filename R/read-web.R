@@ -7,6 +7,7 @@
 #'
 #' @importFrom stats setNames
 #' @importFrom magrittr %>%
+#' @importFrom devtools as.package
 #' @export
 rpkgweb <- function(root_dir = get_web_root()) {
   dirs <-

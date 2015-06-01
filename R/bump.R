@@ -7,6 +7,7 @@
 #' @param component The position of the version to increase, starting at 1.
 #'
 #' @importFrom magrittr %>% extract
+#' @importFrom devtools as.package
 #' @export
 bump <- function(pkg = ".", component = 2L, format = "0.0-0") {
   pkg <- as.package(pkg)
