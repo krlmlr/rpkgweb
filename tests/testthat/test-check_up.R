@@ -13,7 +13,8 @@ local({
         web <- rpkgweb()
 
         for (n in names(web$packages)) {
-          expect_message(check_up(n, web), "Package .* updated", label = n)
+          expect_message(check_up(n, web, quiet = TRUE),
+                         "Package .* updated", label = n)
         }
       })
     )
