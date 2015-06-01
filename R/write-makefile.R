@@ -5,7 +5,9 @@
 #' @importFrom magrittr %>%
 #' @importFrom MakefileR create_makefile
 #' @export
-write_makefile <- function(web = get_web_root()) {
+write_makefile <- function(web = rpkgweb()) {
+  web <- as.rpkgweb(web)
+
   makefile_text <-
     web %>%
     read_web %>%

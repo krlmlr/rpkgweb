@@ -4,7 +4,7 @@
 \alias{check_up}
 \title{Check and install package if required}
 \usage{
-check_up(pkg, webroot = get_web_root())
+check_up(pkg, web = rpkgweb())
 }
 \arguments{
 \item{pkg}{Location of package}

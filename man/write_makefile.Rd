@@ -4,7 +4,7 @@
 \alias{write_makefile}
 \title{Read a package web}
 \usage{
-write_makefile(web = get_web_root())
+write_makefile(web = rpkgweb())
 }
 \description{
 This function reads a web of packages.

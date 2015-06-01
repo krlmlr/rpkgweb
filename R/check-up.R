@@ -7,9 +7,9 @@
 #' @importFrom magrittr %>% extract2
 #' @param pkg Location of package
 #' @export
-check_up <- function(pkg, webroot = get_web_root()) {
-  web <- webroot %>%
-    read_web()
+check_up <- function(pkg, web = rpkgweb()) {
+  web <- as.rpkgweb(web)
+
   available <- web %>%
     extract2(pkg)
 
