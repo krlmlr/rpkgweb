@@ -86,29 +86,12 @@ check_dir <- function(x) {
     stop("Path is null", call. = FALSE)
   }
 
-  # Normalise path and strip trailing slashes
-  x <- normalise_path(x)
-  x <- package_root(x) %||% x
-
-  if (!file.exists(x)) {
-    stop("Can't find directory ", x, call. = FALSE)
-  }
-  if (!file.info(x)$isdir) {
-    stop(x, " is not a directory", call. = FALSE)
-  }
-
-  x
+  package_root(x)
 }
 
 #' @importFrom rprojroot find_root is_r_package
 package_root <- function(path) {
   find_root(is_r_package, path = path)
-}
-
-normalise_path <- function(x) {
-  x <- sub("\\\\+$", "/", x)
-  x <- sub("/*$", "", x)
-  x
 }
 
 # Load package DESCRIPTION into convenient form.
