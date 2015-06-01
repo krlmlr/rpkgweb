@@ -27,8 +27,9 @@ deps_df.rpkgweb <- function(web) {
     },
     SIMPLIFY = FALSE)
 
+  all_deps <- do.call(rbind, all_deps)
+
   all_deps %>%
-    dplyr::bind_rows() %>%
     dplyr::group_by(package, dep_type) %>%
     dplyr::do(parse_deps(.$deps)[, "name", drop = FALSE]) %>%
     dplyr::ungroup() %>%
