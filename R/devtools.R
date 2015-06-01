@@ -1,3 +1,15 @@
+## This module has been extracted from the devtools package, Git revision
+## 7d12dd83f032f6f5861a6fa8a76f717787dd150b (Fri May 29 16:53:03 2015 -0500).
+## Reason: Avoid loading of heavy devtools package for analyzing dependencies.
+##
+## Original files: R/package.r and R/package-deps.r
+##
+## Original source URL:
+## https://github.com/hadley/devtools/tree/7d12dd83f032f6f5861a6fa8a76f717787dd150b/R
+##
+## Copyright RStudio, Inc.; licensed under GPL v2, license text under
+## http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt .
+
 #' Coerce input to a package.
 #'
 #' Possible specifications of package:
