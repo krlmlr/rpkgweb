@@ -100,29 +100,9 @@ check_dir <- function(x) {
   x
 }
 
+#' @importFrom rprojroot find_root is_r_package
 package_root <- function(path) {
-  if (is.package(path)) {
-    return(path$path)
-  }
-  stopifnot(is.character(path))
-
-  has_description <- function(path) {
-    file.exists(file.path(path, 'DESCRIPTION'))
-  }
-  path <- normalizePath(path, mustWork = FALSE)
-  while (!has_description(path) && !is_root(path)) {
-    path <- dirname(path)
-  }
-
-  if (is_root(path)) {
-    NULL
-  } else {
-    path
-  }
-}
-
-is_root <- function(path) {
-  identical(path, dirname(path))
+  find_root(is_r_package, path = path)
 }
 
 normalise_path <- function(x) {
@@ -152,5 +132,3 @@ load_pkg_description <- function(path) {
 #'
 #' @keywords internal
 is.package <- function(x) inherits(x, "package")
-
-
