@@ -14,10 +14,11 @@ makify.default <- function(makefile, y) {
   stop("Cannot use makify for object of class ", class(y))
 }
 
-#' @importFrom MakefileR append_make_rule
+#' @importFrom MakefileR append_make_rule append_make_def
 #' @export
 makify.rpkgweb <- function(makefile, y) {
   makefile %>%
+    append_make_def("R_USER_LIBRARY", .libPaths()[[1L]]) %>%
     append_make_rule("all", y %>% names) %>%
     append_make_rule(".FORCE") %>%
     append_make_rule("Makefile", ".FORCE", "Rscript -e \"rpkgweb::write_makefile()\"") %>%
@@ -39,5 +40,5 @@ makify.deps_df <- function(makefile, y) {
   Reduce(c, rules, init = makefile)
 }
 
-lib_desc_path <- . %>% file.path(.libPaths()[[1L]], ., "DESCRIPTION")
+lib_desc_path <- . %>% file.path("${R_USER_LIBRARY}", ., "DESCRIPTION")
 code_desc_path <- . %>% file.path(., "DESCRIPTION")
