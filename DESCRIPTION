@@ -5,7 +5,7 @@ Authors@R: as.person("Kirill Müller <krlmlr+r@mailbox.org> [aut, cre]")
 Description: This package helps managing projects that consist of multiple
   individual R packages.
 Depends: R (>= 3.2.0)
-Imports: devtools, MakefileR, dplyr, magrittr, rprojroot
+Imports: devtools, MakefileR, magrittr, rprojroot
 License: GPL-3
 LazyData: true
 Encoding: UTF-8
