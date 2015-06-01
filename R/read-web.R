@@ -2,12 +2,12 @@
 #'
 #' This function reads a web of packages.
 #'
-#' @param web A directory within a package web
+#' @param web_root The root directory of the package web
 #'
 #' @importFrom stats setNames
 #' @importFrom magrittr %>%
 #' @export
-read_web <- function(web = get_web_root()) {
+rpkgweb <- function(web_root = get_web_root()) {
   dirs <-
     dir(path = web, include.dirs = TRUE, full.names = TRUE) %>%
     file.info %>%
@@ -21,11 +21,11 @@ read_web <- function(web = get_web_root()) {
     structure(class = "rpkgweb")
 }
 
-#' @rdname read_web
+#' @rdname rpkgweb
 #' @export
 is.rpkgweb <- function(x) inherits(x, "rpkgweb")
 
-#' @rdname read_web
+#' @rdname rpkgweb
 #' @export
 as.rpkgweb <- function(x) UseMethod("as.rpkgweb", x)
 

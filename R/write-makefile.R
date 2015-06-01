@@ -2,8 +2,6 @@
 #'
 #' This function reads a web of packages.
 #'
-#' @inheritParams read_web
-#'
 #' @importFrom magrittr %>%
 #' @importFrom MakefileR create_makefile
 #' @export

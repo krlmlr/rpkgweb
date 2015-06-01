@@ -6,9 +6,6 @@
 \usage{
 write_makefile(web = get_web_root())
 }
-\arguments{
-\item{web}{A directory within a package web}
-}
 \description{
 This function reads a web of packages.
 }
