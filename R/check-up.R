@@ -8,7 +8,6 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom devtools as.package
-#' @param pkg Location of package
 #' @export
 check_up <- function(pkg, web = rpkgweb(), quiet = FALSE) {
   web <- as.rpkgweb(web)

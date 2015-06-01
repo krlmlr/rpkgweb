@@ -7,7 +7,8 @@
 bump(pkg = ".", component = 2L, format = "0.0-0")
 }
 \arguments{
-\item{pkg}{Location of package}
+\item{pkg}{package description, can be path or package name.  See
+\code{\link{as.package}} for more information}
 
 \item{component}{The position of the version to increase, starting at 1.}
 }
