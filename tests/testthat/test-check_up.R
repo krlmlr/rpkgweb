@@ -5,14 +5,17 @@ local({
   dir.create(lib_dir)
   on.exit(unlink(lib_dir, recursive = TRUE, force = TRUE), add = TRUE)
 
-  devtools::in_dir(
-    "test_web",
-    local({
-      web <- rpkgweb()
+  devtools::with_lib(
+    lib_dir,
+    devtools::in_dir(
+      "test_web",
+      local({
+        web <- rpkgweb()
 
-      for (n in names(web$packages)) {
-        expect_message(check_up(n, web), "Package .* updated", label = n)
-      }
-    })
+        for (n in names(web$packages)) {
+          expect_message(check_up(n, web), "Package .* updated", label = n)
+        }
+      })
+    )
   )
 })
