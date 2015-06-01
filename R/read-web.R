@@ -21,6 +21,27 @@ read_web <- function(web = get_web_root()) {
     structure(class = "rpkgweb")
 }
 
+#' @rdname read_web
+#' @export
+is.rpkgweb <- function(x) inherits(x, "rpkgweb")
+
+#' @rdname read_web
+#' @export
+as.rpkgweb <- function(x) UseMethod("as.rpkgweb", x)
+
+#' @export
+as.rpkgweb.default <- function(x) {
+  stop("Required character value or object of class rpkgweb.", call. = FALSE)
+}
+
+#' @export
+as.rpkgweb.rpkgweb <- identity
+
+#' @export
+as.rpkgweb.character <- function(x) {
+  read_web(x)
+}
+
 #' @export
 format.rpkgweb <- function(x, ...) {
   c(
