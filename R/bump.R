@@ -36,6 +36,7 @@ increase_version <- function(version, component, format) {
     strsplit("[.-]") %>%
     extract2(1L) %>%
     sapply(as.integer) %>%
+    extract(seq_len(component)) %>%
     extract(seq_len(max(component, .MIN_COMPONENTS)))
 
   version[is.na(version)] <- 0L
