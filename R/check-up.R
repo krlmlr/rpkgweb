@@ -5,6 +5,8 @@
 #' dependencies, checks the package and installs it if all checks succeed.
 #'
 #' @inheritParams devtools::install
+#' @return \code{TRUE} if package has been updated, \code{FALSE} if the package
+#'   is already up to date, or an error if there was a failure
 #'
 #' @importFrom magrittr %>%
 #' @importFrom devtools as.package
@@ -21,7 +23,7 @@ check_up <- function(pkg, web = rpkgweb(), quiet = FALSE) {
   cmp <- compareVersion(installed_version, available$version)
   if (cmp == 0) {
     message("Package ", pkg, " is up to date: ", available$version)
-    return(invisible(NULL))
+    return(invisible(FALSE))
   }
 
   if (installed_version == "") {
@@ -61,7 +63,7 @@ check_up <- function(pkg, web = rpkgweb(), quiet = FALSE) {
     stop("Package ", pkg, " not updated")
   }
   message("Package ", pkg, " ", "updated", ": ", available$version)
-  return(invisible(NULL))
+  return(invisible(TRUE))
 }
 
 #' @importFrom devtools as.package
