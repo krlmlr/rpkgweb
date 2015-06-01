@@ -1,8 +1,8 @@
 #' Check and install package if required
 #'
 #' If the currently installed version of a package differs
-#' from the locally available version, this function checks the package
-#' and installs it if all checks succeed.
+#' from the locally available version, this function uninstalls all reverse
+#' dependencies, checks the package and installs it if all checks succeed.
 #'
 #' @inheritParams devtools::install
 #'
