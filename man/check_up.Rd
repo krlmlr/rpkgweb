@@ -4,17 +4,23 @@
 \alias{check_up}
 \title{Check and install package if required}
 \usage{
-check_up(pkg, web = rpkgweb(), quiet = FALSE)
+check_up(pkg_name, web = rpkgweb(), quiet = FALSE)
 }
 \arguments{
-\item{pkg}{package description, can be path or package name.  See
-\code{\link{as.package}} for more information}
-
-\item{quiet}{if \code{TRUE} suppresses output from this function.}
+\item{pkg_name}{Name of the package, \emph{not} the path!}
+}
+\value{
+\code{TRUE} if package has been updated, \code{FALSE} if the package
+  is already up to date, or an error if there was a failure
 }
 \description{
 If the currently installed version of a package differs
-from the locally available version, this function checks the package
-and installs it if all checks succeed.
+from the locally available version, this function uninstalls all reverse
+dependencies, checks the package and installs it if all checks succeed.
+}
+\details{
+TODO: devtools-like interface with pkg = "." and web = rpkgweb(pkg)
+
+TODO: argument unload = !is_loaded(pkg)
 }
 

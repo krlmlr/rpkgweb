@@ -4,38 +4,42 @@
 #' from the locally available version, this function uninstalls all reverse
 #' dependencies, checks the package and installs it if all checks succeed.
 #'
-#' @inheritParams devtools::install
+#' TODO: devtools-like interface with pkg = "." and web = rpkgweb(pkg)
+#'
+#' TODO: argument unload = !is_loaded(pkg)
+#'
 #' @return \code{TRUE} if package has been updated, \code{FALSE} if the package
 #'   is already up to date, or an error if there was a failure
 #'
+#' @param pkg_name Name of the package, \emph{not} the path!
 #' @importFrom magrittr %>%
 #' @importFrom devtools as.package
 #' @export
-check_up <- function(pkg, web = rpkgweb(), quiet = FALSE) {
+check_up <- function(pkg_name, web = rpkgweb(), quiet = FALSE) {
   web <- as.rpkgweb(web)
 
   if (quiet) message <- function(...) invisible(NULL)
 
-  available <- web$packages[[pkg]]
+  available <- web$packages[[pkg_name]]
 
-  installed_version <- get_installed_version(pkg)
+  installed_version <- get_installed_version(available$package)
 
   cmp <- compareVersion(installed_version, available$version)
   if (cmp == 0) {
-    message("Package ", pkg, " is up to date: ", available$version)
+    message("Package ", available$package, " is up to date: ", available$version)
     return(invisible(FALSE))
   }
 
   if (installed_version == "") {
-    message("Package ", pkg, " not yet installed.")
+    message("Package ", available$package, " not yet installed.")
   } else {
-    message("Package ", pkg, " installed in version ", installed_version,
+    message("Package ", available$package, " installed in version ", installed_version,
             ", now installing ", available$version)
   }
 
   ##devtools::check(available, cran = FALSE)
 
-  depth_df <- get_dep_depth_df(pkg %>% as.package, web)
+  depth_df <- get_dep_depth_df(available, web)
   pkgs_to_remove <-
     depth_df$package %>%
     find.package(quiet = TRUE) %>%
@@ -53,10 +57,10 @@ check_up <- function(pkg, web = rpkgweb(), quiet = FALSE) {
   devtools::install(available, dependencies = FALSE,
                     args = "--no-test-load", quiet = quiet)
 
-  if (compareVersion(get_installed_version(pkg), available$version) != 0) {
-    stop("Package ", pkg, " not updated")
+  if (compareVersion(get_installed_version(available$package), available$version) != 0) {
+    stop("Package ", available$package, " not updated")
   }
-  message("Package ", pkg, " ", "updated", ": ", available$version)
+  message("Package ", available$package, " ", "updated", ": ", available$version)
   return(invisible(TRUE))
 }
 
