@@ -4,11 +4,9 @@
 \alias{makify}
 \title{Construct a Makefile}
 \usage{
-makify(makefile, y)
+makify(y)
 }
 \arguments{
-\item{makefile}{A Makefile as created by \code{\link[MakefileR]{makefile}}}
-
 \item{y}{The object to construct the \code{Makefile} for}
 }
 \value{

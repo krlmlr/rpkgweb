@@ -10,7 +10,8 @@ write_makefile <- function(web = rpkgweb()) {
 
   makefile_text <-
     web %>%
-    makify(makefile(), .) %>%
+    makify %>%
+    makefile %>%
     format
 
   makefile_name <- file.path(web$root_dir, "Makefile")
