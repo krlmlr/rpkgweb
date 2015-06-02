@@ -7,7 +7,7 @@
 makify(makefile, y)
 }
 \arguments{
-\item{makefile}{A Makefile as created by \code{\link[MakefileR]{create_makefile}}}
+\item{makefile}{A Makefile as created by \code{\link[MakefileR]{makefile}}}
 
 \item{y}{The object to construct the \code{Makefile} for}
 }

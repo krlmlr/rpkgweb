@@ -2,7 +2,7 @@
 #'
 #' This function constructs a \code{Makefile} for various objects.
 #'
-#' @param makefile A Makefile as created by \code{\link[MakefileR]{create_makefile}}
+#' @param makefile A Makefile as created by \code{\link[MakefileR]{makefile}}
 #' @param y The object to construct the \code{Makefile} for
 #' @return A Makefile
 #'
@@ -30,12 +30,12 @@ makify.rpkgweb <- function(makefile, y) {
     makify(y %>% deps_df)
 }
 
-#' @importFrom MakefileR create_make_rule
+#' @importFrom MakefileR make_rule
 #' @export
 makify.deps_df <- function(makefile, y) {
   rules <- mapply(y$package %>% lib_desc_path,
                   y$name %>% lib_desc_path,
-                  FUN = create_make_rule, SIMPLIFY = FALSE)
+                  FUN = make_rule, SIMPLIFY = FALSE)
   Reduce(c, rules, init = makefile)
 }
 
