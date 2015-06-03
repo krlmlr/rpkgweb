@@ -22,8 +22,7 @@ makify.rpkgweb <- function(y) {
     make_rule(".FORCE") +
     make_rule("Makefile", ".FORCE", "Rscript -e \"rpkgweb::write_makefile()\"") +
     make_rule(lib_desc_path("%"), code_desc_path("%"),
-                     c("Rscript -e \"rpkgweb::check_up('$(patsubst %/,%,$(dir $<))')\"",
-                       "touch $@")) +
+              "Rscript -e \"rpkgweb::check_up('$(patsubst %/,%,$(dir $<))')\"") +
     (
       y$packages %>%
         names %>%

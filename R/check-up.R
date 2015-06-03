@@ -22,11 +22,15 @@ check_up <- function(pkg_name, web = rpkgweb(), quiet = FALSE) {
 
   available <- web$packages[[pkg_name]]
 
-  installed_version <- get_installed_version(available$package)
+  installed <- get_installed(available$package)
+  installed_version <- installed$version %||% ""
 
   cmp <- compareVersion(installed_version, available$version)
   if (cmp == 0) {
     message("Package ", available$package, " is up to date: ", available$version)
+    installed_description_file <- file.path(installed$path, "DESCRIPTION")
+    message("Updating timestamp for ", installed_description_file)
+    Sys.setFileTime(installed_description_file, Sys.time())
     return(invisible(FALSE))
   }
 
@@ -65,15 +69,13 @@ check_up <- function(pkg_name, web = rpkgweb(), quiet = FALSE) {
 }
 
 #' @importFrom devtools as.package
-get_installed_version <- function(pkg) {
+get_installed <- function(pkg) {
   pkg_path <- find.package(pkg, quiet = TRUE)
-  installed <- if (length(pkg_path) > 0L) {
+  if (length(pkg_path) > 0L) {
     as.package(pkg_path)
   } else {
     NULL
   }
-
-  installed$version %||% ""
 }
 
 "%||%" <- function(a, b) if (!is.null(a)) a else b
