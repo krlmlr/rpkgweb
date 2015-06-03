@@ -5,10 +5,10 @@ envvar <- function() {
   pkg_path <- subset(devtools::loaded_packages(), package == "rpkgweb")$path
   if (file.path(pkg_path, "tests", "testthat") == normalizePath(".", winslash = "/")) {
     # Loaded by devtools, need patched version
-    envvar <- list(RPKGWEB_QUALIFY = sprintf("devtools::load_all(\"%s\"); ", pkg_path))
+    list(RPKGWEB_QUALIFY = sprintf("devtools::load_all(\"%s\"); ", pkg_path))
   } else {
     # Installed package in R CMD check -- reset R_TESTS which points to an invalid path
-    envvar <- list(R_TESTS = "")
+    list(R_TESTS = "")
   }
 }
 
