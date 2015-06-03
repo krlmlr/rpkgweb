@@ -31,7 +31,7 @@ check_up <- function(pkg_name, web = rpkgweb(), quiet = FALSE) {
   }
 
   if (installed_version == "") {
-    message("Package ", available$package, " not yet installed.")
+    message("Package ", available$package, " not installed.")
   } else {
     message("Package ", available$package, " installed in version ", installed_version,
             ", now installing ", available$version)
