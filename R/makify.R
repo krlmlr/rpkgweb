@@ -20,9 +20,12 @@ makify.rpkgweb <- function(y) {
     make_def("R_USER_LIBRARY", .libPaths()[[1L]]) +
     make_rule("all", y$packages %>% names) +
     make_rule(".FORCE") +
-    make_rule("Makefile", ".FORCE", "Rscript -e \"rpkgweb::write_makefile()\"") +
+    make_rule("Makefile", ".FORCE",
+              "write_makefile()" %>%
+                .rpkgweb_qualify() %>% Rscript_call()) +
     make_rule(lib_desc_path("%"), code_desc_path("%"),
-              "Rscript -e \"rpkgweb::check_up('$(patsubst %/,%,$(dir $<))')\"") +
+              "check_up('$(patsubst %/,%,$(dir $<))')" %>%
+                .rpkgweb_qualify() %>% Rscript_call()) +
     (
       y$packages %>%
         names %>%
@@ -43,3 +46,11 @@ makify.deps_df <- function(y) {
 
 lib_desc_path <- . %>% file.path("${R_USER_LIBRARY}", ., "DESCRIPTION")
 code_desc_path <- . %>% file.path(., "DESCRIPTION")
+
+.rpkgweb_qualify <- function(expr) {
+  sprintf("rpkgweb::%s", expr)
+}
+
+Rscript_call <- function(expr) {
+  sprintf("Rscript -e \"%s\"", expr)
+}
