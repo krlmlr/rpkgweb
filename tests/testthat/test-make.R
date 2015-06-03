@@ -13,10 +13,10 @@ envvar <- function() {
 }
 
 test_that("creation of Makefile", {
-  devtools::in_dir(
-    "test_web",
-    devtools::with_envvar(
-      envvar(),
+  devtools::with_envvar(
+    envvar(),
+    devtools::in_dir(
+      "test_web",
       local({
         web <- rpkgweb()
 
