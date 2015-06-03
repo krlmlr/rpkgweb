@@ -48,7 +48,7 @@ lib_desc_path <- . %>% file.path("${R_USER_LIBRARY}", ., "DESCRIPTION")
 code_desc_path <- . %>% file.path(., "DESCRIPTION")
 
 .rpkgweb_qualify <- function(expr) {
-  sprintf("rpkgweb::%s", expr)
+  paste0(Sys.getenv("RPKGWEB_QUALIFY", "rpkgweb::"), expr)
 }
 
 Rscript_call <- function(expr) {
