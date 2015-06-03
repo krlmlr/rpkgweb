@@ -1,12 +1,13 @@
 context("make")
 
 test_that("creation of Makefile", {
+  pkg_path <- subset(devtools::loaded_packages(), package == "rpkgweb")$path
   devtools::in_dir(
     "test_web",
     devtools::with_envvar(
       # Use load_all() instead of qualification :: to access test version
       # of package instead of installed version
-      list(RPKGWEB_QUALIFY = sprintf("devtools::load_all('%s'); ", devtools::as.package(".")$path)),
+      list(RPKGWEB_QUALIFY = sprintf("devtools::load_all('%s'); ", pkg_path)),
       local({
         web <- rpkgweb()
 
