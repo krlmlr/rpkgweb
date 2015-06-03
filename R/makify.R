@@ -52,5 +52,5 @@ code_desc_path <- . %>% file.path(., "DESCRIPTION")
 }
 
 Rscript_call <- function(expr) {
-  sprintf("Rscript -e \"%s\"", expr)
+  sprintf("Rscript -e '%s'", expr)
 }
