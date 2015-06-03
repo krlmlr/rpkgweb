@@ -1,13 +1,22 @@
 context("make")
 
 test_that("creation of Makefile", {
+  # Instruct the Makefile where to load the package from
   pkg_path <- subset(devtools::loaded_packages(), package == "rpkgweb")$path
+  if (file.path(pkg_path, "tests", "testthat") == normalizePath(".", winslash = "/")) {
+    # Loaded by devtools, need patched version
+    envvar <- list(RPKGWEB_QUALIFY = sprintf("devtools::load_all(\"%s\"); ", pkg_path))
+  } else {
+    # Installed package in R CMD check -- reset R_TESTS which points to an invalid path
+    envvar <- list(R_TESTS = "")
+  }
+
   devtools::in_dir(
     "test_web",
     devtools::with_envvar(
       # Use load_all() instead of qualification :: to access test version
       # of package instead of installed version
-      list(RPKGWEB_QUALIFY = sprintf("devtools::load_all('%s'); ", pkg_path)),
+      envvar,
       local({
         web <- rpkgweb()
 
