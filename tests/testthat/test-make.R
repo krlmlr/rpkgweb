@@ -40,17 +40,19 @@ test_that("creation of Makefile", {
 })
 
 test_that("execution of Makefile", {
-  lib_dir <- normalizePath(".lib", mustWork = FALSE)
+  lib_dir <- ".lib"
   dir.create(lib_dir)
   on.exit(unlink(lib_dir, recursive = TRUE, force = TRUE), add = TRUE)
+  lib_dir <- normalizePath(".lib", mustWork = TRUE)
 
   devtools::with_lib(
-    lib_dir,
+    c(lib_dir, .libPaths()),
     devtools::in_dir(
       "test_web",
       devtools::with_envvar(
         envvar(),
         local({
+          stopifnot(lib_dir == .libPaths()[[1L]])
           web <- rpkgweb()
 
           write_makefile(web)

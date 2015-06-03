@@ -1,19 +1,22 @@
 context("check_up")
 
 test_that("check_up acceptance test", {
-  lib_dir <- normalizePath(".lib", mustWork = FALSE)
+  lib_dir <- ".lib"
   dir.create(lib_dir)
   on.exit(unlink(lib_dir, recursive = TRUE, force = TRUE), add = TRUE)
+  lib_dir <- normalizePath(".lib", mustWork = TRUE)
 
   safe_unload <- function(n) {
     if (n %in% loadedNamespaces()) devtools::unload(n)
   }
 
   devtools::with_lib(
-    lib_dir,
+    c(lib_dir, .libPaths()),
     devtools::in_dir(
       "test_web",
       local({
+        stopifnot(lib_dir == .libPaths()[[1L]])
+
         web <- rpkgweb()
 
         on.exit({
