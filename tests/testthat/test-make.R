@@ -38,3 +38,36 @@ test_that("creation of Makefile", {
     )
   )
 })
+
+test_that("execution of Makefile", {
+  lib_dir <- normalizePath(".lib", mustWork = FALSE)
+  dir.create(lib_dir)
+  on.exit(unlink(lib_dir, recursive = TRUE, force = TRUE), add = TRUE)
+
+  devtools::with_lib(
+    lib_dir,
+    devtools::in_dir(
+      "test_web",
+      devtools::with_envvar(
+        envvar(),
+        local({
+          web <- rpkgweb()
+
+          write_makefile(web)
+          on.exit(file.remove("Makefile"), add = TRUE)
+
+          res <- system2("make", stdout = TRUE, stderr = TRUE)
+          #writeLines(res, "make.log")
+          expect_null(attr(res, "status"))
+
+          expect_true(any(grepl("unchanged", res)))
+          for (n in names(web$packages)) {
+            expect_true(any(grepl(sprintf("check_up.*%s", n), res)), info = n)
+            expect_true(any(grepl(sprintf("%s not installed", n), res)), info = n)
+            expect_true(any(grepl(sprintf("%s updated", n), res)), info = n)
+          }
+        })
+      )
+    )
+  )
+})
