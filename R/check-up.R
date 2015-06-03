@@ -23,7 +23,7 @@ check_up <- function(pkg_name, web = rpkgweb(), quiet = FALSE) {
   available <- web$packages[[pkg_name]]
 
   installed <- get_installed(available$package)
-  installed_version <- installed$version %||% ""
+  installed_version <- get_version(installed)
 
   cmp <- compareVersion(installed_version, available$version)
   if (cmp == 0) {
@@ -61,7 +61,8 @@ check_up <- function(pkg_name, web = rpkgweb(), quiet = FALSE) {
   devtools::install(available, dependencies = FALSE,
                     args = "--no-test-load", quiet = quiet)
 
-  if (compareVersion(get_installed_version(available$package), available$version) != 0) {
+  if (compareVersion(get_installed(available$package) %>% get_version,
+                     available$version) != 0) {
     stop("Package ", available$package, " not updated")
   }
   message("Package ", available$package, " ", "updated", ": ", available$version)
@@ -76,6 +77,10 @@ get_installed <- function(pkg) {
   } else {
     NULL
   }
+}
+
+get_version <- function(pkg) {
+  pkg$version %||% ""
 }
 
 "%||%" <- function(a, b) if (!is.null(a)) a else b
