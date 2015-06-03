@@ -26,6 +26,7 @@ test_that("creation of Makefile", {
         expect_message(write_makefile(), "unchanged")
 
         res <- system2("make", "-n", stdout = TRUE, stderr = TRUE)
+        #writeLines(res, "make.log")
         expect_null(attr(res, "status"))
 
         expect_true(any(grepl("unchanged", res)))
