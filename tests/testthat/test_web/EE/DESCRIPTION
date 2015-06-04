@@ -7,3 +7,4 @@ Depends: R (>= 3.2.0), CC
 License: GPL-3
 LazyData: true
 Encoding: UTF-8
+Imports: devtools
