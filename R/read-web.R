@@ -22,7 +22,7 @@ rpkgweb <- function(root_dir = get_web_root()) {
         dirs %>% setNames(., basename(.)),
         as.package
       ),
-      root_dir = root_dir
+      root_dir = normalizePath(root_dir, winslash = "/")
     ),
     class = "rpkgweb")
 }
