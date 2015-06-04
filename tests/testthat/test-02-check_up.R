@@ -33,7 +33,7 @@ test_that("check_up acceptance test", {
           on.exit(unlink(a_source_file), add = TRUE)
 
           expect_message(devtools::uninstall(web$packages[[1]], quiet = TRUE),
-                         lib_dir)
+                         .libPaths()[[1L]])
           expect_error(check_up(web$packages[[1]]$package, web, quiet = TRUE),
                          "thisWillTriggerAnError")
           safe_unload(web$packages[[1]]$package)
@@ -54,7 +54,7 @@ test_that("check_up acceptance test", {
           on.exit(unlink(a_test_file), add = TRUE)
 
           expect_message(devtools::uninstall(web$packages[[1]], quiet = TRUE),
-                         lib_dir)
+                         .libPaths()[[1L]])
           expect_error(check_up(web$packages[[1]]$package, web, quiet = TRUE),
                        "thisWillTriggerAnError")
           safe_unload(web$packages[[1]]$package)
