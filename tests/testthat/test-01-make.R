@@ -46,22 +46,12 @@ test_that("execution of Makefile", {
   # Packages are originally not installed
   expect_false(any((web$packages %>% names) %in% rownames(installed.packages())))
 
-  lib_dir <- ".lib"
-  dir.create(lib_dir)
-  on.exit(unlink(lib_dir, recursive = TRUE, force = TRUE), add = TRUE)
-  lib_dir <- normalizePath(".lib", mustWork = TRUE)
-
-  expect_false(lib_dir %in% .libPaths())
-
-  devtools::with_libpaths(
-    c(lib_dir, .libPaths()),
+  devtools::with_temp_libpaths(
     devtools::in_dir(
       "test_web",
       devtools::with_envvar(
         envvar(),
         local({
-          stopifnot(lib_dir == .libPaths()[[1L]])
-
           write_makefile(web)
           on.exit(file.remove("Makefile"), add = TRUE)
 
@@ -79,8 +69,6 @@ test_that("execution of Makefile", {
       )
     )
   )
-
-  expect_false(lib_dir %in% .libPaths())
 
   # Packages are not installed after running
   expect_false(any((web$packages %>% names) %in% rownames(installed.packages())))
