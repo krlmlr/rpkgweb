@@ -16,10 +16,14 @@ rpkgweb <- function(root_dir = get_web_root()) {
     subset(isdir) %>%
     row.names
 
+  desc_dirs <-
+    dir(path = dirs, pattern = "^DESCRIPTION$", full.names = TRUE) %>%
+    dirname
+
   structure(
     list(
       packages = lapply(
-        dirs %>% setNames(., basename(.)),
+        desc_dirs %>% setNames(., basename(.)),
         as.package
       ),
       root_dir = normalizePath(root_dir, winslash = "/")
