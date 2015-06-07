@@ -45,7 +45,7 @@ as.rpkgweb.rpkgweb <- identity
 
 #' @export
 as.rpkgweb.character <- function(x) {
-  rpkgweb(web_root = x)
+  rpkgweb(root_dir = x)
 }
 
 #' @export
