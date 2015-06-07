@@ -43,7 +43,8 @@ check_up <- function(pkg_name, web = rpkgweb(), quiet = FALSE) {
 
   ##devtools::check(available, cran = FALSE)
 
-  depth_df <- get_dep_depth_df(available, web)
+  depth_df <- get_dep_depth_df(available,
+                               web %>% deps_df %>% subset(internal))
   pkgs_to_remove <-
     depth_df$package %>%
     find.package(quiet = TRUE) %>%
