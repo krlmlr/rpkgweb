@@ -41,7 +41,7 @@ makify <- function(web = rpkgweb()) {
 makify_deps <- function(y) {
   y <- y %>% subset(internal)
   rules <- mapply(y$package %>% lib_desc_path,
-                  y$name %>% lib_desc_path,
+                  y$dep_package %>% lib_desc_path,
                   FUN = make_rule, SIMPLIFY = FALSE)
   Reduce(c, rules, init = make_group(make_comment("Dependencies")))
 }

@@ -30,14 +30,14 @@ deps_df <- function(web = rpkgweb()) {
       if (length(name) > 0) {
         data.frame(package = all_deps_df$package[[i]],
                              dep_type = all_deps_df$dep_type[[i]],
-                             name = name)
+                             dep_package = name)
       } else {
         NULL
       }
     }
   ) %>%
     do.call(rbind, .) %>%
-    transform(internal = name %in% names(all_deps)) %>%
+    transform(internal = dep_package %in% names(all_deps)) %>%
     prepend_class("deps_df")
 }
 

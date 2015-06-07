@@ -1,13 +1,14 @@
 as.igraph.deps_df <- function(x, ...) {
-  igraph::graph.data.frame(x[c("name", "package", "dep_type")])
+  igraph::graph.data.frame(x[c("dep_package", "package", "dep_type")])
 }
 
 get_dep_depth_df <- function(pkg, deps) {
   deps_igraph <-
     deps %>%
     as.igraph.deps_df %>%
-    igraph::graph.union(igraph::graph.empty(1) %>%
-                          igraph::set.vertex.attribute("name", value = pkg$package))
+    igraph::graph.union(
+      igraph::graph.empty(1) %>%
+      igraph::set.vertex.attribute("name", value = pkg$package))
 
   graph_dep_dist <-
     deps_igraph %>%
