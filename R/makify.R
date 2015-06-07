@@ -46,6 +46,7 @@ makify.rpkgweb <- function(y) {
 #' @importFrom MakefileR make_rule
 #' @export
 makify.deps_df <- function(y) {
+  y <- y %>% subset(internal)
   rules <- mapply(y$package %>% lib_desc_path,
                   y$name %>% lib_desc_path,
                   FUN = make_rule, SIMPLIFY = FALSE)

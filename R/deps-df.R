@@ -43,7 +43,7 @@ deps_df.rpkgweb <- function(web) {
     }
   ) %>%
     do.call(rbind, .) %>%
-    subset(name %in% names(all_deps)) %>%
+    transform(internal = name %in% names(all_deps)) %>%
     prepend_class("deps_df")
 }
 
