@@ -3,17 +3,11 @@
 #' This function computes all dependencies (internal and external) in a
 #' package web and returns the information as a data frame.
 #'
-#' @export
-deps_df <- function(web) UseMethod("deps_df")
-
-#' @export
-deps_df.default <- function(web) {
-  stop("Need object of class rpkgweb")
-}
-
 #' @importFrom devtools parse_deps
 #' @export
-deps_df.rpkgweb <- function(web) {
+deps_df <- function(web = rpkgweb()) {
+  web <- as.rpkgweb(web)
+
   all_deps <-
     web$packages %>%
     lapply(names) %>%

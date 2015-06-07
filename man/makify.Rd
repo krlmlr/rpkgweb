@@ -4,10 +4,10 @@
 \alias{makify}
 \title{Construct a Makefile}
 \usage{
-makify(y)
+makify(web = rpkgweb())
 }
 \arguments{
-\item{y}{The object to construct the \code{Makefile} for}
+\item{web}{The object to construct the \code{Makefile} for}
 }
 \value{
 A Makefile

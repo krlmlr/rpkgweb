@@ -4,7 +4,7 @@
 \alias{deps_df}
 \title{Return dependencies in a package web as data frame}
 \usage{
-deps_df(web)
+deps_df(web = rpkgweb())
 }
 \description{
 This function computes all dependencies (internal and external) in a
