@@ -11,13 +11,13 @@ vignette: >
 
 Being able to generate all figures and plots for an academic submission
 from raw data can be considered the "gold standard" of reproducible
-research. [1] By automating the process, it is possible to easily verify
+research.[^1] By automating the process, it is possible to easily verify
 reproducibility at any stage during the analysis. Automation also allows
 easy recreation of the entire analysis based on modified inputs or model
 assumptions. However, rerunning the entire analysis starting from raw
 data soon becomes too time-consuming for interactive use. Caching
 intermediate results alleviates this, but introduces the problem of
-cache invalidation [2].
+cache invalidation[^2].
 
 R packages offer everything necessary to conduct statistical analyses:
 They can store data, code, and written documentation (in the form of
@@ -28,21 +28,21 @@ distributed over several interdependent packages where each serves a
 dedicated purpose (e.g., holding raw data, munging data, input
 validation, modelling, analysis, reporting, ...). Dependencies between
 packages are specified as usual. The framework tracks which downstream
-packages [3] need to be rebuilt if a package changes, and allows
+packages[^3] need to be rebuilt if a package changes, and allows
 updating mutually independent packages in parallel. Interactive work is
 possible within the context of each package, while maintaining full
-reproducibility [4].
+reproducibility[^4].
 
 
-[1] Numerous contributions to the R ecosystem are geared towards this
+[^1]: Numerous contributions to the R ecosystem are geared towards this
 aim (including but not limited to interfaces to other data formats,
 weaving of code and text, and of course the immense variety of
 statistical modelling tools)
 
-[2] (which, according to Phil Karlton, is one of the two hard things in
-computer science).
+[^2]: (which, according to Phil Karlton, is one of the two hard things in
+computer science)
 
-[3] (reverse dependencies)
+[^3]: (reverse dependencies)
 
-[4] (which can be continuously monitored by using version control
+[^4]: (which can be continuously monitored by using version control
 systems and continuous integration)
