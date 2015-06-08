@@ -91,13 +91,17 @@ systems and continuous integration)
 
 - Dependencies via `DESCRIPTION`
 
-- Main operations
+- Main verbs
     - `load_all`
     - `test`
     - `bump` (or `uninstall`)
+    - `check_up` (= purge revdeps + `test` + `install`)
 
 - Downstream dependencies: `Makefile`
-    - `check_up` (= purge revdeps + `test` + `install`)
+
+- Additional verbs
+    - `document`
+    - `check`
 
 
 ## Package organization
@@ -114,11 +118,11 @@ systems and continuous integration)
     - `use_data()`
 
 - Validation, checking assumptions
-    - Test
+    - Test, perhaps in a child package
 
 - Generating data (munging, intermediate or final results)
     - As variables generated during `build`
-    - `use_data()` during `test()`
+    - `use_data()` during `test()`, perhaps in a child package
 
 - Configuration
     - Perhaps a "base" package all other packages depend upon
@@ -131,6 +135,12 @@ systems and continuous integration)
 - Documentation
     - As vignettes
     - Inline using `roxygen2`
+    - Materialized during `test`
+        - Caution: This fails `check` -- no `DESCRIPTION` found
+            - Solution: Check `R_TESTS` environment variable, don't build if
+              not empty
+    - ... or during `install`
+        - Caution: No version control
 
 
 ## How design goals are achieved
@@ -167,3 +177,4 @@ systems and continuous integration)
 
 ## Summary and outlook
 
+- Package generation must be cheap -- `mason`
