@@ -29,8 +29,9 @@ deps_df <- function(web = rpkgweb()) {
       name <- parse_deps(all_deps_df$deps[[i]])$name
       if (length(name) > 0) {
         data.frame(package = all_deps_df$package[[i]],
-                             dep_type = all_deps_df$dep_type[[i]],
-                             dep_package = name)
+                   dep_type = all_deps_df$dep_type[[i]],
+                   dep_package = name,
+                   stringsAsFactors = FALSE)
       } else {
         NULL
       }
