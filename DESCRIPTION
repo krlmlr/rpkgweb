@@ -9,4 +9,6 @@ Imports: devtools, MakefileR (>= 0.3-3), magrittr, igraph
 License: GPL-3
 LazyData: true
 Encoding: UTF-8
-Suggests: testthat
+Suggests: testthat,
+    knitr
+VignetteBuilder: knitr
