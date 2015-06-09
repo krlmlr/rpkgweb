@@ -55,7 +55,7 @@ check_up <- function(pkg_name, web = rpkgweb(), quiet = FALSE) {
     remove.packages(pkgs_to_remove, .libPaths()[[1L]])
   }
 
-  if (devtools:::uses_testthat(available)) {
+  if (devtools::uses_testthat(available)) {
     devtools::test(available, quiet = quiet, reporter = "stop")
   }
 
