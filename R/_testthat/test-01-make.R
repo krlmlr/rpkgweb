@@ -3,7 +3,7 @@ context("make")
 envvar <- function() {
   # Instruct the Makefile where to load the package from
   pkg_path <- subset(devtools::loaded_packages(), package == "rpkgweb")$path
-  ret <- if (file.path(pkg_path, "tests", "testthat", "test_web") == normalizePath(".", winslash = "/")) {
+  ret <- if (file.path(pkg_path, "R", "_testthat", "test_web") == normalizePath(".", winslash = "/")) {
     # Loaded by devtools, need patched version
     list(RPKGWEB_QUALIFY = sprintf("devtools::load_all('%s');", pkg_path))
   } else {
