@@ -10,7 +10,7 @@ envvar <- function() {
     # Installed package in R CMD check -- reset R_TESTS which points to an invalid path
     list(R_TESTS = "")
   }
-  ret <- c(ret, R_LIBS=.libPaths()[[1L]])
+  ret <- c(ret, R_LIBS=paste(.libPaths(), collapse = ":"))
   ret
 }
 
