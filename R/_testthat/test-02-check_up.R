@@ -5,7 +5,7 @@ test_that("check_up acceptance test", {
     if (n %in% loadedNamespaces()) devtools::unload(n)
   }
 
-  devtools::with_temp_libpaths(
+  with_temp_libpaths(
     devtools::in_dir(
       "test_web",
       local({

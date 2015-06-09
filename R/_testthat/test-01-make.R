@@ -46,7 +46,7 @@ test_that("execution of Makefile", {
   # Packages are originally not installed
   expect_false(any((web$packages %>% names) %in% rownames(installed.packages())))
 
-  devtools::with_temp_libpaths(
+  with_temp_libpaths(
     devtools::in_dir(
       "test_web",
       devtools::with_envvar(
