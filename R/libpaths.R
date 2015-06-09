@@ -1,6 +1,9 @@
 # While not in devtools or new package
-with_temp_libpaths <- function(code) {
+with_temp_lib <- function(code) {
   lib_paths <- tempfile("lib", fileext = "rpkgweb")
   dir.create(lib_paths)
-  devtools::with_libpaths(lib_paths, code)
+
+  all_lib_paths <- c(lib_paths, .libPaths())
+
+  devtools::with_libpaths(all_lib_paths, code)
 }
