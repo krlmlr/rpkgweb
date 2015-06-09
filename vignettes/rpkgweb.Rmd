@@ -223,3 +223,6 @@ Reiterate as necessary!
 - Package generation must be cheap -- `mason`
 
 - Multi-project IDE -- not yet (RStudio?)
+
+- Constantly switching between `R` and `tests/testthat`
+    - `use_testthat_symlink`
