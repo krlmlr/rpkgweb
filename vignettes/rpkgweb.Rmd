@@ -123,6 +123,7 @@ systems and continuous integration)
 - Generating data (munging, intermediate or final results)
     - As variables generated during `build`
     - `use_data()` during `test()`, perhaps in a child package
+        - Check `R_TESTS`
 
 - Configuration
     - Perhaps a "base" package all other packages depend upon
@@ -139,8 +140,50 @@ systems and continuous integration)
         - Caution: This fails `check` -- no `DESCRIPTION` found
             - Solution: Check `R_TESTS` environment variable, don't build if
               not empty
-    - ... or during `install`
-        - Caution: No version control
+
+
+## Workflow
+
+### Data preparation
+
+- Start with raw data packages
+
+- Add dependent cleanup and munge data packages
+
+- Add packages that check assertions
+
+Reiterate as necessary!
+
+
+### Data processing
+
+- Scripts in `R`
+
+- Reiterate with `load_all()`
+
+- Extract functions
+    - Document using `roxygen2`
+
+- Extract tests
+
+- If loading/testing a package becomes too slow for interactive work, split it
+    1. Package with functions
+    2. Another package that caches results of these functions
+    3. New package depends on cacher package
+
+Reiterate as necessary!
+
+
+### Results
+
+- New package
+
+- All results for presentation should be available in dependent packages
+    - Plotting and table generation should be fast
+
+- Write documentation in vignettes
+
+- Change upstream packages if further results are needed
 
 
 ## How design goals are achieved
@@ -178,3 +221,5 @@ systems and continuous integration)
 ## Summary and outlook
 
 - Package generation must be cheap -- `mason`
+
+- Multi-project IDE -- not yet (RStudio?)
