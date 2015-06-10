@@ -20,7 +20,12 @@ makify <- function(web = rpkgweb()) {
       )
   g +
     make_def("R_USER_LIBRARY", .libPaths()[[1L]]) +
-    make_rule("all", web$packages %>% names) +
+    make_group(
+      make_comment("Universal targets"),
+      make_rule("all", "all-install"),
+      make_rule("all-install", web$packages %>% names),
+      make_rule("all-check", sprintf("check-%s", web$packages %>% names))
+    ) +
     make_rule(".FORCE") +
     make_rule("Makefile", ".FORCE",
               "write_makefile()" %>%
@@ -28,11 +33,22 @@ makify <- function(web = rpkgweb()) {
     make_rule(lib_desc_path("%"), code_desc_path("%"),
               "check_up('$(patsubst %/,%,$(dir $<))')" %>%
                 .rpkgweb_qualify() %>% Rscript_call()) +
+    make_rule(check_log_path("%"),
+              lib_desc_path("%"),
+              paste0("dir.create('", check_dir, "', showWarnings = FALSE, recursive = TRUE); ",
+                     "devtools::check('$(patsubst %/,%,$(dir $<))')") %>%
+                Rscript_call()) +
     (
       web$packages %>%
         names %>%
         lapply(. %>% { make_rule(., lib_desc_path(.)) } ) %>%
         make_group(make_comment("Convenience targets"), .dots = .)
+    ) +
+    (
+      web$packages %>%
+        names %>%
+        lapply(. %>% { make_rule(sprintf("check-%s", .), check_log_path(.)) } ) %>%
+        make_group(make_comment("Convenience targets for checking"), .dots = .)
     ) +
     makify_deps(web %>% deps_df)
 }
@@ -46,6 +62,8 @@ makify_deps <- function(y) {
   Reduce(c, rules, init = make_group(make_comment("Dependencies")))
 }
 
+check_dir <- "rpkgweb-check"
+check_log_path <- . %>% sprintf("%s.Rcheck", .) %>% file.path(check_dir, ., "00check.log")
 lib_desc_path <- . %>% file.path("${R_USER_LIBRARY}", ., "DESCRIPTION")
 code_desc_path <- . %>% file.path(., "DESCRIPTION")
 
