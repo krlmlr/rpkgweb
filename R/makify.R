@@ -34,8 +34,7 @@ makify <- function(web = rpkgweb()) {
               "check_up('$(patsubst %/,%,$(dir $<))')" %>%
                 .rpkgweb_qualify() %>% Rscript_call()) +
     make_rule(check_log_path("%"), c(code_desc_path("%"), lib_desc_path("%")),
-              paste0("dir.create('", check_dir, "', showWarnings = FALSE, recursive = TRUE); ",
-                     "devtools::check('$(patsubst %/,%,$(dir $<))')") %>%
+              paste(check_dir_create_call(), run_check_call(), sep = "; ") %>%
                 Rscript_call()) +
     (
       web$packages %>%
@@ -65,6 +64,15 @@ check_dir <- "rpkgweb-check"
 check_log_path <- . %>% sprintf("%s.Rcheck", .) %>% file.path(check_dir, ., "00check.log")
 lib_desc_path <- . %>% file.path("${R_USER_LIBRARY}", ., "DESCRIPTION")
 code_desc_path <- . %>% file.path(., "DESCRIPTION")
+
+check_dir_create_call <- function() {
+  paste0("dir.create('", check_dir, "', showWarnings = FALSE, recursive = TRUE)")
+}
+
+run_check_call <- function() {
+  paste0("devtools::check('$(patsubst %/,%,$(dir $<))', cleanup = FALSE, check_dir = '",
+         check_dir, "')")
+}
 
 .rpkgweb_qualify <- function(expr) {
   paste0(Sys.getenv("RPKGWEB_QUALIFY", "rpkgweb::"), expr)
