@@ -33,8 +33,7 @@ makify <- function(web = rpkgweb()) {
     make_rule(lib_desc_path("%"), code_desc_path("%"),
               "check_up('$(patsubst %/,%,$(dir $<))')" %>%
                 .rpkgweb_qualify() %>% Rscript_call()) +
-    make_rule(check_log_path("%"),
-              lib_desc_path("%"),
+    make_rule(check_log_path("%"), c(code_desc_path("%"), lib_desc_path("%")),
               paste0("dir.create('", check_dir, "', showWarnings = FALSE, recursive = TRUE); ",
                      "devtools::check('$(patsubst %/,%,$(dir $<))')") %>%
                 Rscript_call()) +
