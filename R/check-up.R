@@ -20,7 +20,7 @@ check_up <- function(pkg_name, web = rpkgweb(), quiet = FALSE) {
 
   if (quiet) message <- function(...) invisible(NULL)
 
-  available <- web$packages[[pkg_name]]
+  available <- web[[pkg_name]]
 
   installed <- get_installed(available$package)
   installed_version <- get_version(installed)

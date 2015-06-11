@@ -21,14 +21,13 @@ rpkgweb <- function(root_dir = get_web_root()) {
     dirname
 
   structure(
-    list(
-      packages = lapply(
-        desc_dirs %>% setNames(., basename(.)),
-        as.package
-      ),
-      root_dir = normalizePath(root_dir, winslash = "/")
+    lapply(
+      desc_dirs %>% setNames(., basename(.)),
+      as.package
     ),
-    class = "rpkgweb")
+    class = "rpkgweb",
+    root_dir = normalizePath(root_dir, winslash = "/")
+  )
 }
 
 #' @rdname rpkgweb
@@ -55,13 +54,28 @@ as.rpkgweb.character <- function(x) {
 #' @export
 format.rpkgweb <- function(x, ...) {
   c(
-    paste("A package web rooted at", x$root_dir, "consisting of",
-          length(x$packages), "package(s):"),
-    paste("-", paste(lapply(x$packages, `[[`, "package"), collapse = ", "))
+    paste("A package web rooted at", root_dir(x), "consisting of",
+          length(x), "package(s):"),
+    paste("-", paste(lapply(x, `[[`, "package"), collapse = ", "))
   )
 }
 
 #' @export
 print.rpkgweb <- function(x, ...) {
   cat(paste(format(x), collapse = "\n"), "\n")
+}
+
+#' @details \code{root_dir} returns the root directory of the web.
+#' @rdname rpkgweb
+#' @export
+root_dir <- function(x) UseMethod("root_dir", x)
+
+#' @export
+root_dir.default <- function(x) {
+  stop("Required object of class rpkgweb.", call. = FALSE)
+}
+
+#' @export
+root_dir.rpkgweb <- function(x) {
+  attr(x, "root_dir", TRUE)
 }
