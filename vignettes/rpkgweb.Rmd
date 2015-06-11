@@ -123,7 +123,8 @@ systems and continuous integration)
 - Generating data (munging, intermediate or final results)
     - As variables generated during `build`
     - `use_data()` during `test()`, perhaps in a child package
-        - Check `R_TESTS`
+        - Check `R_TESTS` -> custom "testing" framework that runs
+          when started from `devtools` but not with `R CMD check`
 
 - Configuration
     - Perhaps a "base" package all other packages depend upon
@@ -226,3 +227,4 @@ Reiterate as necessary!
 
 - Constantly switching between `R` and `tests/testthat`
     - `use_testthat_symlink`
+    - Own testing infrastructure
