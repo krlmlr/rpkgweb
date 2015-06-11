@@ -1,16 +1,11 @@
 context("check_up")
 
 test_that("check_up acceptance test", {
-  safe_unload <- function(n) {
-    if (n %in% loadedNamespaces()) devtools::unload(n)
-  }
-
   web <- rpkgweb("test_web")
 
   skip_if_packages_installed(web)
 
   with_temp_lib(
-
     devtools::in_dir(
       web$root_dir,
       local({

@@ -4,3 +4,7 @@ skip_if_packages_installed <- function(web) {
     skip("At least one of the test packages is installed")
   }
 }
+
+safe_unload <- function(n) {
+  if (n %in% loadedNamespaces()) devtools::unload(n)
+}
