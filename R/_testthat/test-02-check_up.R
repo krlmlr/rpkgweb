@@ -7,7 +7,7 @@ test_that("check_up acceptance test", {
 
   with_temp_lib(
     devtools::in_dir(
-      web$root_dir,
+      root_dir(web),
       local({
         on.exit({
           for (n in names(web$packages)) {

@@ -20,7 +20,7 @@ test_that("creation of Makefile", {
   skip_if_packages_installed(web)
 
   devtools::in_dir(
-    web$root_dir,
+    root_dir(web),
     devtools::with_envvar(
       envvar(),
       local({
@@ -49,7 +49,7 @@ test_that("execution of Makefile", {
 
   with_temp_lib(
     devtools::in_dir(
-      web$root_dir,
+      root_dir(web),
       devtools::with_envvar(
         envvar(),
         local({
