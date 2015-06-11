@@ -10,19 +10,22 @@ test_that("check_up acceptance test", {
       root_dir(web),
       local({
         on.exit({
-          for (n in names(web)) {
-            safe_unload(n)
+          for (p in web) {
+            n <- p$package
+            safe_unload(p)
           }
         }, add = TRUE)
 
-        for (n in names(web)) {
+        for (p in web) {
+          n <- p$package
           expect_true(check_up(n, web, quiet = TRUE), info = n)
-          safe_unload(n)
+          safe_unload(p)
         }
 
-        for (n in names(web)) {
+        for (p in web) {
+          n <- p$package
           expect_false(check_up(n, web, quiet = TRUE), info = n)
-          safe_unload(n)
+          safe_unload(p)
         }
 
         local({
@@ -34,16 +37,18 @@ test_that("check_up acceptance test", {
                          .libPaths()[[1L]])
           expect_error(check_up(web[[1]]$package, web, quiet = TRUE),
                          "thisWillTriggerAnError")
-          safe_unload(web[[1]]$package)
+          safe_unload(web[[1]])
 
-          for (n in names(web)[-1:-2]) {
+          for (p in web[-1:-2]) {
+            n <- p$package
             expect_error(check_up(n, web, quiet = TRUE), "Command failed", info = n)
           }
         })
 
-        for (n in names(web)) {
+        for (p in web) {
+          n <- p$package
           expect_true(check_up(n, web, quiet = TRUE), info = n)
-          safe_unload(n)
+          safe_unload(p)
         }
 
         local({
@@ -55,9 +60,10 @@ test_that("check_up acceptance test", {
                          .libPaths()[[1L]])
           expect_error(check_up(web[[1]]$package, web, quiet = TRUE),
                        "thisWillTriggerAnError")
-          safe_unload(web[[1]]$package)
+          safe_unload(web[[1]])
 
-          for (n in names(web)[-1:-2]) {
+          for (p in web[-1:-2]) {
+            n <- p$package
             expect_error(check_up(n, web, quiet = TRUE), "Command failed", info = n)
           }
 
@@ -69,12 +75,13 @@ test_that("check_up acceptance test", {
             a_test_file)
           expect_error(check_up(web[[1]]$package, web, quiet = TRUE),
                        "Test failed")
-          safe_unload(web[[1]]$package)
+          safe_unload(web[[1]])
         })
 
-        for (n in names(web)) {
+        for (p in web) {
+          n <- p$package
           expect_true(check_up(n, web, quiet = TRUE), info = n)
-          safe_unload(n)
+          safe_unload(p)
         }
       })
     )

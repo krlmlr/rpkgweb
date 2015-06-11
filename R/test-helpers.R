@@ -5,6 +5,6 @@ skip_if_packages_installed <- function(web) {
   }
 }
 
-safe_unload <- function(n) {
-  if (n %in% loadedNamespaces()) devtools::unload(n)
+safe_unload <- function(pkg) {
+  if (pkg$package %in% loadedNamespaces()) devtools::unload(pkg)
 }

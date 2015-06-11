@@ -20,11 +20,27 @@ rpkgweb <- function(root_dir = get_web_root()) {
     dir(path = dirs, pattern = "^DESCRIPTION$", full.names = TRUE) %>%
     dirname
 
+  packages <-
+    desc_dirs %>%
+    lapply(as.package) %>%
+    { setNames(., nm = lapply(., `[[`, "package")) }
+
+  differing <- which(names(packages) != basename(desc_dirs))
+  if (length(differing) > 0L) {
+    stop("Implicit make rules require that the directory names match the package names.\n",
+         "This is not true for:\n",
+         paste(
+           sprintf(
+             "%s != %s",
+             names(packages[differing]),
+             basename(desc_dirs[differing])),
+           collapse = "\n"),
+         call. = FALSE
+    )
+  }
+
   structure(
-    lapply(
-      desc_dirs %>% setNames(., basename(.)),
-      as.package
-    ),
+    packages,
     class = "rpkgweb",
     root_dir = normalizePath(root_dir, winslash = "/")
   )
