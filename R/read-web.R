@@ -21,10 +21,8 @@ rpkgweb <- function(root_dir = get_web_root()) {
     dirname
 
   structure(
-    lapply(
-      desc_dirs %>% setNames(., basename(.)),
-      as.package
-    ),
+    lapply(desc_dirs, as.package) %>%
+      { setNames(., nm = lapply(., `[[`, "package")) },
     class = "rpkgweb",
     root_dir = normalizePath(root_dir, winslash = "/")
   )
