@@ -18,7 +18,7 @@ test_that("increasing", {
 })
 
 test_that("bumping", {
-  pkg_path <- "test_web/A"
+  pkg_path <- "test_web/AA"
   desc <- readLines(file.path(pkg_path, "DESCRIPTION"))
   on.exit(writeLines(desc, file.path(pkg_path, "DESCRIPTION")), add = TRUE)
   expect_message(bump(pkg_path), "bumped to version 0.1")
