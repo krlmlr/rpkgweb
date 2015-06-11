@@ -23,8 +23,8 @@ makify <- function(web = rpkgweb()) {
     make_group(
       make_comment("Universal targets"),
       make_rule("all", "all-install"),
-      make_rule("all-install", web$packages %>% names),
-      make_rule("all-check", sprintf("check-%s", web$packages %>% names))
+      make_rule("all-install", web %>% names),
+      make_rule("all-check", sprintf("check-%s", web %>% names))
     ) +
     make_rule(".FORCE") +
     make_rule("Makefile", ".FORCE",
@@ -37,13 +37,13 @@ makify <- function(web = rpkgweb()) {
               paste(check_dir_create_call(), run_check_call(), sep = "; ") %>%
                 Rscript_call()) +
     (
-      web$packages %>%
+      web %>%
         names %>%
         lapply(. %>% { make_rule(., lib_desc_path(.)) } ) %>%
         make_group(make_comment("Convenience targets"), .dots = .)
     ) +
     (
-      web$packages %>%
+      web %>%
         names %>%
         lapply(. %>% { make_rule(sprintf("check-%s", .), check_log_path(.)) } ) %>%
         make_group(make_comment("Convenience targets for checking"), .dots = .)

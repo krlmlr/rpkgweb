@@ -34,7 +34,7 @@ test_that("creation of Makefile", {
         expect_null(attr(res, "status"))
 
         expect_true(any(grepl("unchanged", res)))
-        for (n in names(web$packages)) {
+        for (n in names(web)) {
           expect_true(any(grepl(sprintf("check_up.*%s", n), res)), info = n)
         }
       })
@@ -61,7 +61,7 @@ test_that("execution of Makefile", {
           expect_null(attr(res, "status"))
 
           expect_true(any(grepl("unchanged", res)))
-          for (n in names(web$packages)) {
+          for (n in names(web)) {
             expect_true(any(grepl(sprintf("check_up.*%s", n), res)), info = n)
             expect_true(any(grepl(sprintf("%s not installed", n), res)), info = n)
             expect_true(any(grepl(sprintf("%s updated", n), res)), info = n)
@@ -72,5 +72,5 @@ test_that("execution of Makefile", {
   )
 
   # Packages are not installed after running
-  expect_false(any((web$packages %>% names) %in% rownames(installed.packages())))
+  expect_false(any((web %>% names) %in% rownames(installed.packages())))
 })
