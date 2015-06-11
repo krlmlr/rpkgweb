@@ -7,6 +7,7 @@
 #'
 #' @importFrom stats setNames
 #' @importFrom magrittr %>%
+#' @importFrom devtools as.package
 #' @export
 rpkgweb <- function(root_dir = get_web_root()) {
   dirs <-
@@ -15,15 +16,34 @@ rpkgweb <- function(root_dir = get_web_root()) {
     subset(isdir) %>%
     row.names
 
+  desc_dirs <-
+    dir(path = dirs, pattern = "^DESCRIPTION$", full.names = TRUE) %>%
+    dirname
+
+  packages <-
+    desc_dirs %>%
+    lapply(as.package) %>%
+    { setNames(., nm = lapply(., `[[`, "package")) }
+
+  differing <- which(names(packages) != basename(desc_dirs))
+  if (length(differing) > 0L) {
+    stop("Implicit make rules require that the directory names match the package names.\n",
+         "This is not true for:\n",
+         paste(
+           sprintf(
+             "%s != %s",
+             names(packages[differing]),
+             basename(desc_dirs[differing])),
+           collapse = "\n"),
+         call. = FALSE
+    )
+  }
+
   structure(
-    list(
-      packages = lapply(
-        dirs %>% setNames(., basename(.)),
-        as.package
-      ),
-      root_dir = root_dir
-    ),
-    class = "rpkgweb")
+    packages,
+    class = "rpkgweb",
+    root_dir = normalizePath(root_dir, winslash = "/")
+  )
 }
 
 #' @rdname rpkgweb
@@ -44,19 +64,34 @@ as.rpkgweb.rpkgweb <- identity
 
 #' @export
 as.rpkgweb.character <- function(x) {
-  rpkgweb(web_root = x)
+  rpkgweb(root_dir = x)
 }
 
 #' @export
 format.rpkgweb <- function(x, ...) {
   c(
-    paste("A package web rooted at", x$root_dir, "consisting of",
-          length(x$packages), "package(s):"),
-    paste("-", paste(lapply(x$packages, `[[`, "package"), collapse = ", "))
+    paste("A package web rooted at", root_dir(x), "consisting of",
+          length(x), "package(s):"),
+    paste("-", paste(lapply(x, `[[`, "package"), collapse = ", "))
   )
 }
 
 #' @export
 print.rpkgweb <- function(x, ...) {
   cat(paste(format(x), collapse = "\n"), "\n")
+}
+
+#' @details \code{root_dir} returns the root directory of the web.
+#' @rdname rpkgweb
+#' @export
+root_dir <- function(x) UseMethod("root_dir", x)
+
+#' @export
+root_dir.default <- function(x) {
+  stop("Required object of class rpkgweb.", call. = FALSE)
+}
+
+#' @export
+root_dir.rpkgweb <- function(x) {
+  attr(x, "root_dir", TRUE)
 }

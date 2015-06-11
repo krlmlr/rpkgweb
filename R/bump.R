@@ -3,10 +3,12 @@
 #' This function increases the given component of the version number
 #' in the DESCRIPTION file of a package.
 #'
+#' @inheritParams devtools::install
 #' @inheritParams check_up
 #' @param component The position of the version to increase, starting at 1.
 #'
 #' @importFrom magrittr %>% extract
+#' @importFrom devtools as.package
 #' @export
 bump <- function(pkg = ".", component = 2L, format = "0.0-0") {
   pkg <- as.package(pkg)
@@ -34,6 +36,7 @@ increase_version <- function(version, component, format) {
     strsplit("[.-]") %>%
     extract2(1L) %>%
     sapply(as.integer) %>%
+    extract(seq_len(component)) %>%
     extract(seq_len(max(component, .MIN_COMPONENTS)))
 
   version[is.na(version)] <- 0L

@@ -1,4 +1,4 @@
-Package: AA
+Package: BBB
 Title: What the Package Does (one line, title case)
 Version: 0.0-0
 Authors@R: as.person("Kirill Müller <krlmlr+r@mailbox.org> [aut, cre]")
@@ -7,3 +7,5 @@ Depends: R (>= 3.2.0)
 License: GPL-3
 LazyData: true
 Encoding: UTF-8
+Suggests: AA
+Imports: testthat

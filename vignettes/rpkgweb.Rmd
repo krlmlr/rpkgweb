@@ -1,0 +1,234 @@
+---
+title: "Package webs: Results from raw data"
+author: "Kirill Müller"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Being able to generate all figures and plots for an academic submission
+from raw data can be considered the "gold standard" of reproducible
+research.[^1] By automating the process, it is possible to easily verify
+reproducibility at any stage during the analysis. Automation also allows
+easy recreation of the entire analysis based on modified inputs or model
+assumptions. However, rerunning the entire analysis starting from raw
+data soon becomes too time-consuming for interactive use. Caching
+intermediate results alleviates this, but introduces the problem of
+cache invalidation[^2].
+
+R packages offer everything necessary to conduct statistical analyses:
+They can store data, code, and written documentation (in the form of
+vignettes). Recent efforts have considerably simplified the packaging
+process in R, there is first-class support in R and RStudio
+(and probably in many other environments).
+The `rpkgweb` package offers a framework where a statistical analysis can be
+distributed over several interdependent packages, each serving a
+dedicated purpose (e.g., holding raw data, munging data, input
+validation, modelling, analysis, reporting, ...). Dependencies between
+packages are specified as usual in the `DESCRIPTION` file.
+The framework tracks which downstream
+packages[^3] need to be rebuilt if a package changes, and allows
+updating mutually independent packages in parallel. Interactive work is
+possible within the context of each package, while maintaining full
+reproducibility[^4].
+
+
+
+[^1]: Numerous contributions to the R ecosystem are geared towards this
+aim (including but not limited to interfaces to other data formats,
+weaving of code and text, and of course the immense variety of
+statistical modelling tools)
+
+[^2]: (which, according to Phil Karlton, is one of the two hard things in
+computer science)
+
+[^3]: (reverse dependencies)
+
+[^4]: (which can be continuously monitored by using version control
+systems and continuous integration)
+
+
+## Related work
+
+- `ProjectTemplate`
+
+- `mvbutils`
+
+- `modules`
+
+- R blog
+
+
+## Design goals
+
+- Usability
+
+- Automation
+
+- Reproducibility of results
+
+- Integration with existing infrastructure
+
+- Interactive processing
+
+- Scalability
+
+- Large datasets
+
+- Caching
+
+- Parallelization
+
+
+## Framework
+
+- One package, one concern
+
+- Package web: Directory with several packages
+
+- Dependencies via `DESCRIPTION`
+
+- Main verbs
+    - `load_all`
+    - `test`
+    - `bump` (or `uninstall`)
+    - `check_up` (= purge revdeps + `test` + `install`)
+
+- Downstream dependencies: `Makefile`
+
+- Additional verbs
+    - `document`
+    - `check`
+
+
+## Package organization
+
+- Defining functions: In `R` folder
+
+- Executing code
+    - `load_all`
+    - `test`
+    - `install`
+
+- Raw data
+    - As packages
+    - `use_data()`
+
+- Validation, checking assumptions
+    - Test, perhaps in a child package
+
+- Generating data (munging, intermediate or final results)
+    - As variables generated during `build`
+    - `use_data()` during `test()`, perhaps in a child package
+        - Check `R_TESTS` -> custom "testing" framework that runs
+          when started from `devtools` but not with `R CMD check`
+
+- Configuration
+    - Perhaps a "base" package all other packages depend upon
+
+- Plots and tables
+    - As functions
+    - As variables generated during `build`
+    - Rendered during `test`
+
+- Documentation
+    - As vignettes
+    - Inline using `roxygen2`
+    - Materialized during `test`
+        - Caution: This fails `check` -- no `DESCRIPTION` found
+            - Solution: Check `R_TESTS` environment variable, don't build if
+              not empty
+
+
+## Workflow
+
+### Data preparation
+
+- Start with raw data packages
+
+- Add dependent cleanup and munge data packages
+
+- Add packages that check assertions
+
+Reiterate as necessary!
+
+
+### Data processing
+
+- Scripts in `R`
+
+- Reiterate with `load_all()`
+
+- Extract functions
+    - Document using `roxygen2`
+
+- Extract tests
+
+- If loading/testing a package becomes too slow for interactive work, split it
+    1. Package with functions
+    2. Another package that caches results of these functions
+    3. New package depends on cacher package
+
+Reiterate as necessary!
+
+
+### Results
+
+- New package
+
+- All results for presentation should be available in dependent packages
+    - Plotting and table generation should be fast
+
+- Write documentation in vignettes
+
+- Change upstream packages if further results are needed
+
+
+## How design goals are achieved
+
+### Usability: Simple concept, packaged in a tested and documented package
+
+### Automation: Generation of a `Makefile`
+
+### Reproducibility: Clean and rebuild
+
+### Integration with existing infrastructure: Package as building block
+
+- RStudio + `devtools`
+
+- Git
+
+- CI systems
+
+- `packrat`
+
+### Interactive processing: Work on one package at a time
+
+### Scalability: Use packages
+
+### Large datasets: Use packages
+
+### Caching: Use packages
+
+### Parallelization: `make -j ...`
+
+## Example: Calibrating a survey
+
+
+## Other uses
+
+- Package development
+
+
+## Summary and outlook
+
+- Package generation must be cheap -- `mason`
+
+- Multi-project IDE -- not yet (RStudio?)
+
+- Constantly switching between `R` and `tests/testthat`
+    - `use_testthat_symlink`
+    - Own testing infrastructure
