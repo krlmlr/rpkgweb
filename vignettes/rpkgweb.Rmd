@@ -215,8 +215,12 @@ Reiterate as necessary!
 
 ### Parallelization: `make -j ...`
 
-
 ## Example: Calibrating a survey
+
+
+## Other uses
+
+- Package development
 
 
 ## Summary and outlook
