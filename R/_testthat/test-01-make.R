@@ -15,13 +15,15 @@ envvar <- function() {
 }
 
 test_that("creation of Makefile", {
+  web <- rpkgweb("test_web")
+
+  skip_if_packages_installed(web)
+
   devtools::in_dir(
-    "test_web",
+    web$root_dir,
     devtools::with_envvar(
       envvar(),
       local({
-        web <- rpkgweb()
-
         write_makefile(web)
         on.exit(file.remove("Makefile"), add = TRUE)
 
@@ -43,12 +45,11 @@ test_that("creation of Makefile", {
 test_that("execution of Makefile", {
   web <- rpkgweb("test_web")
 
-  # Packages are originally not installed
-  expect_false(any((web$packages %>% names) %in% rownames(installed.packages())))
+  skip_if_packages_installed(web)
 
   with_temp_lib(
     devtools::in_dir(
-      "test_web",
+      web$root_dir,
       devtools::with_envvar(
         envvar(),
         local({

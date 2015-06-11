@@ -5,12 +5,15 @@ test_that("check_up acceptance test", {
     if (n %in% loadedNamespaces()) devtools::unload(n)
   }
 
-  with_temp_lib(
-    devtools::in_dir(
-      "test_web",
-      local({
-        web <- rpkgweb()
+  web <- rpkgweb("test_web")
 
+  skip_if_packages_installed(web)
+
+  with_temp_lib(
+
+    devtools::in_dir(
+      web$root_dir,
+      local({
         on.exit({
           for (n in names(web$packages)) {
             safe_unload(n)
