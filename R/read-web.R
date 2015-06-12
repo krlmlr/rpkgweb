@@ -69,11 +69,16 @@ as.rpkgweb.character <- function(x) {
 
 #' @export
 format.rpkgweb <- function(x, ...) {
-  c(
-    paste("A package web rooted at", root_dir(x), "consisting of",
-          length(x), "package(s):"),
-    paste("-", paste(lapply(x, `[[`, "package"), collapse = ", "))
-  )
+  rooted <- paste("A package web rooted at", root_dir(x))
+  if (length(x) == 0) {
+    paste(rooted, "without any packages.")
+  } else {
+    c(
+      paste(rooted, "consisting of",
+            length(x), "package(s):"),
+      paste("-", paste(lapply(x, `[[`, "package"), collapse = ", "))
+    )
+  }
 }
 
 #' @export

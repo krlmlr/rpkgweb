@@ -19,7 +19,11 @@ deps_df <- function(web = rpkgweb()) {
                    stringsAsFactors = FALSE)
       }
     },
-    SIMPLIFY = FALSE)
+    SIMPLIFY = FALSE) %>%
+    c(list(data.frame(
+      package = character(),
+      dep_type = character(),
+      deps = character())))
 
   all_deps_df <- do.call(rbind, all_deps)
 
@@ -37,6 +41,10 @@ deps_df <- function(web = rpkgweb()) {
       }
     }
   ) %>%
+    c(list(data.frame(
+      package = character(),
+      dep_type = character(),
+      dep_package = character()))) %>%
     do.call(rbind, .) %>%
     transform(internal = dep_package %in% names(all_deps)) %>%
     prepend_class("deps_df")
