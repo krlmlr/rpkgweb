@@ -59,6 +59,8 @@ systems and continuous integration)
 
 - `modules`
 
+- `memoise`
+
 - R blog
 
 
