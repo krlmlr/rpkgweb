@@ -10,5 +10,6 @@ License: GPL-3
 LazyData: true
 Encoding: UTF-8
 Suggests: testthat,
-    knitr
+    knitr, gridGraphviz (>= 0.3)
 VignetteBuilder: knitr
+Additional_repositories: http://R-Forge.R-project.org
