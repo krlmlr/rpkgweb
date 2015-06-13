@@ -10,18 +10,31 @@ test_that("creation of Makefile", {
     devtools::in_dir(
       root_dir(web),
       local({
-        write_makefile(web)
-        on.exit(file.remove("Makefile"), add = TRUE)
+        for (target_dir in list(NULL, ".", "unrelated")) {
+          write_makefile(web, target_dir = target_dir)
 
-        expect_message(write_makefile(), "unchanged")
+          if (is.null(target_dir)) {
+            makefile_path <- "Makefile"
+            make_extra_commands <- NULL
+          } else {
+            makefile_path <- file.path(target_dir, "Makefile")
+            make_extra_commands <- c("-C", shQuote(target_dir))
+          }
 
-        res <- system2("make", "-n", stdout = TRUE, stderr = TRUE)
-        #writeLines(res, "make.log")
-        expect_null(attr(res, "status"))
+          expect_true(file.exists(makefile_path), info = makefile_path)
+          on.exit(file.remove(makefile_path), add = TRUE)
 
-        expect_true(any(grepl("unchanged", res)))
-        for (n in names(web)) {
-          expect_true(any(grepl(sprintf("check_up.*%s", n), res)), info = n)
+          expect_message(write_makefile(web, target_dir = target_dir), "unchanged")
+
+          res <- system2("make", c("-n", make_extra_commands), stdout = TRUE, stderr = TRUE)
+          #writeLines(res, "make.log")
+          expect_null(attr(res, "status"),
+                      info = paste(make_extra_commands, collapse = " "))
+
+          expect_true(any(grepl("unchanged", res)))
+          for (n in names(web)) {
+            expect_true(any(grepl(sprintf("check_up.*%s", n), res)), info = n)
+          }
         }
       })
     )
