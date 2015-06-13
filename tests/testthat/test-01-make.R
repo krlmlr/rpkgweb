@@ -41,7 +41,7 @@ test_that("creation of Makefile", {
   )
 })
 
-test_that("execution of Makefile", {
+test_that("execution of Makefile for temp lib", {
   web <- rpkgweb("test_web")
 
   skip_if_packages_installed(web)
@@ -50,6 +50,12 @@ test_that("execution of Makefile", {
 
   # Packages are not installed after running
   expect_false(any((web %>% names) %in% rownames(installed.packages())))
+})
+
+test_that("execution of Makefile for other lib", {
+  web <- rpkgweb("test_web")
+
+  skip_if_packages_installed(web)
 
   test_make(web, lib_dir = "unrelated")
 
