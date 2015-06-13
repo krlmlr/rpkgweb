@@ -23,7 +23,7 @@ envvar <- function() {
   ret
 }
 
-test_make <- function(web, target_dir = NULL, lib_dir = NULL) {
+test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
   make_extra_commands <- NULL
 
   if (is.null(target_dir)) {
@@ -36,6 +36,10 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL) {
   if (!is.null(lib_dir)) {
     paths_to_remove <- file.path(root_dir(web), lib_dir, names(web))
     on.exit(unlink(paths_to_remove, recursive = TRUE), add = TRUE)
+  }
+
+  if (dry_run) {
+    make_extra_commands <- c(make_extra_commands, "-n")
   }
 
   devtools::with_envvar(
@@ -57,8 +61,10 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL) {
         expect_true(any(grepl("unchanged", res)))
         for (n in names(web)) {
           expect_true(any(grepl(sprintf("check_up.*%s", n), res)), info = n)
-          expect_true(any(grepl(sprintf("%s not installed", n), res)), info = n)
-          expect_true(any(grepl(sprintf("%s updated", n), res)), info = n)
+          if (!dry_run) {
+            expect_true(any(grepl(sprintf("%s not installed", n), res)), info = n)
+            expect_true(any(grepl(sprintf("%s updated", n), res)), info = n)
+          }
         }
       })
     )
