@@ -25,6 +25,7 @@ test_that("creation of Makefile", {
       envvar(),
       local({
         write_makefile(web)
+        expect_true(file.exists("Makefile"))
         on.exit(file.remove("Makefile"), add = TRUE)
 
         expect_message(write_makefile(), "unchanged")
