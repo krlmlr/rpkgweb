@@ -59,13 +59,13 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
     ) +
     make_group(
       make_comment("Package library"),
-      make_def("R_USER_LIBRARY", .libPaths()[[1L]])
+      make_def("R_LIBS", .libPaths()[[1L]])
     ) +
     (
       if (lib_export) {
-        make_text("export R_USER_LIBRARY")
+        make_text("export R_LIBS")
       } else {
-        make_comment("don't re-export R_USER_LIBRARY")
+        make_comment("don't re-export R_LIBS")
       }
     ) +
     make_group(
@@ -108,7 +108,7 @@ makify_deps <- function(y) {
   Reduce(c, rules, init = make_group(make_comment("Dependencies")))
 }
 
-lib_desc_path <- . %>% file.path("${R_USER_LIBRARY}", ., "DESCRIPTION")
+lib_desc_path <- . %>% file.path("${R_LIBS}", ., "DESCRIPTION")
 
 .rpkgweb_qualify <- function(expr) {
   paste0(Sys.getenv("RPKGWEB_QUALIFY", "rpkgweb::"), expr)
