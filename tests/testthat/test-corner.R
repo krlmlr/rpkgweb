@@ -8,10 +8,18 @@ test_that("empty web", {
   expect_equal(length(web), 0)
   expect_match(format(web), "without any packages")
 
-  write_makefile(web)
+  devtools::with_envvar(
+    envvar(),
+    devtools::in_dir(
+      root_dir(web),
+      local({
+        write_makefile(web)
 
-  devtools::in_dir(tmp_dir, {
-    res <- system2("make", "-n", stdout = TRUE, stderr = TRUE)
-    expect_null(attr(res, "status"))
-  })
+        expect_message(write_makefile(web), "unchanged")
+
+        res <- system2("make", "-n", stdout = TRUE, stderr = TRUE)
+        expect_null(attr(res, "status"))
+      })
+    )
+  )
 })
