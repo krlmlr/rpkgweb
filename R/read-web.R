@@ -42,8 +42,12 @@ rpkgweb <- function(root_dir = get_web_root()) {
   structure(
     packages,
     class = "rpkgweb",
-    root_dir = normalizePath(root_dir, winslash = "/")
+    root_dir = normalize_path(root_dir)
   )
+}
+
+normalize_path <- function(path) {
+  normalizePath(path, winslash = "/")
 }
 
 #' @rdname rpkgweb
