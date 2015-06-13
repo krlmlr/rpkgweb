@@ -57,7 +57,17 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
       make_comment("Web"),
       make_def("RPKGWEB_ROOT_DIR", root_dir_rel)
     ) +
-    make_def("R_USER_LIBRARY", .libPaths()[[1L]]) +
+    make_group(
+      make_comment("Package library"),
+      make_def("R_USER_LIBRARY", .libPaths()[[1L]])
+    ) +
+    (
+      if (lib_export) {
+        make_text("export R_USER_LIBRARY")
+      } else {
+        make_comment("don't re-export R_USER_LIBRARY")
+      }
+    ) +
     make_group(
       make_comment("Universal targets"),
       make_rule("all", "all-install"),
