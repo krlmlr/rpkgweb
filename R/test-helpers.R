@@ -23,7 +23,16 @@ envvar <- function() {
   ret
 }
 
-test_make <- function(web, lib_dir = NULL) {
+test_make <- function(web, target_dir = NULL, lib_dir = NULL) {
+  make_extra_commands <- NULL
+
+  if (is.null(target_dir)) {
+    makefile_path <- "Makefile"
+  } else {
+    makefile_path <- file.path(target_dir, "Makefile")
+    make_extra_commands <- c(make_extra_commands, "-C", shQuote(target_dir))
+  }
+
   if (!is.null(lib_dir)) {
     paths_to_remove <- file.path(root_dir(web), lib_dir, names(web))
     on.exit(unlink(paths_to_remove, recursive = TRUE), add = TRUE)
@@ -34,10 +43,14 @@ test_make <- function(web, lib_dir = NULL) {
     devtools::in_dir(
       root_dir(web),
       local({
-        write_makefile(web, lib_dir = lib_dir)
-        on.exit(file.remove("Makefile"), add = TRUE)
+        write_makefile(web, target_dir = target_dir, lib_dir = lib_dir)
+        expect_true(file.exists(makefile_path), info = makefile_path)
+        on.exit(file.remove(makefile_path), add = TRUE)
 
-        res <- system2("make", stdout = TRUE, stderr = TRUE)
+        expect_message(write_makefile(web, target_dir = target_dir, lib_dir = lib_dir),
+                       "unchanged")
+
+        res <- system2("make", make_extra_commands, stdout = TRUE, stderr = TRUE)
         #writeLines(res, "make.log")
         expect_null(attr(res, "status"))
 
