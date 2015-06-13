@@ -24,6 +24,11 @@ envvar <- function() {
 }
 
 test_make <- function(web, lib_dir = NULL) {
+  if (!is.null(lib_dir)) {
+    paths_to_remove <- file.path(root_dir(web), lib_dir, names(web))
+    on.exit(unlink(paths_to_remove, recursive = TRUE), add = TRUE)
+  }
+
   devtools::with_envvar(
     envvar(),
     devtools::in_dir(
