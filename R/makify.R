@@ -45,7 +45,7 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
 
   rpkgweb_qualify <- Sys.getenv("RPKGWEB_QUALIFY", "rpkgweb::")
 
-  pkg_name <- "$(patsubst %/,%,$(dir $<))"
+  pkg_name <- "$(notdir $(patsubst %/,%,$(dir $<)))"
 
   check_dir_create_call <-
     "dir.create('{{{ check_dir }}}', showWarnings = FALSE, recursive = TRUE)"
