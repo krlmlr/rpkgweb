@@ -227,6 +227,12 @@ Reiterate as necessary!
 - Package development
 
 
+## Open questions
+
+- Parametrized builds?
+    - More than one `Makefile`
+
+
 ## Summary and outlook
 
 - Package generation must be cheap -- `mason`
