@@ -59,7 +59,7 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
     ) +
     make_group(
       make_comment("Package library"),
-      make_def("R_LIBS", .libPaths()[[1L]])
+      make_def("R_LIBS", lib_dir)
     ) +
     (
       if (lib_export) {
