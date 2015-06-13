@@ -2,15 +2,17 @@
 #'
 #' This function reads a web of packages.
 #'
+#' @inheritParams makify
+#'
 #' @importFrom magrittr %>%
 #' @importFrom MakefileR makefile
 #' @export
-write_makefile <- function(web = rpkgweb()) {
+write_makefile <- function(web = rpkgweb(), target_dir = NULL) {
   web <- as.rpkgweb(web)
 
   makefile_text <-
     web %>%
-    makify %>%
+    makify(target_dir = target_dir) %>%
     makefile %>%
     format
 
