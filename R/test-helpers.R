@@ -22,3 +22,27 @@ envvar <- function() {
   ret <- c(ret, R_LIBS=paste(.libPaths(), collapse = ":"))
   ret
 }
+
+test_make <- function(web, lib_dir = NULL) {
+  devtools::with_envvar(
+    envvar(),
+    devtools::in_dir(
+      root_dir(web),
+      local({
+        write_makefile(web, lib_dir = lib_dir)
+        on.exit(file.remove("Makefile"), add = TRUE)
+
+        res <- system2("make", stdout = TRUE, stderr = TRUE)
+        #writeLines(res, "make.log")
+        expect_null(attr(res, "status"))
+
+        expect_true(any(grepl("unchanged", res)))
+        for (n in names(web)) {
+          expect_true(any(grepl(sprintf("check_up.*%s", n), res)), info = n)
+          expect_true(any(grepl(sprintf("%s not installed", n), res)), info = n)
+          expect_true(any(grepl(sprintf("%s updated", n), res)), info = n)
+        }
+      })
+    )
+  )
+}

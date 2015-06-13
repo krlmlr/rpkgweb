@@ -46,29 +46,12 @@ test_that("execution of Makefile", {
 
   skip_if_packages_installed(web)
 
-  with_temp_lib(
-    devtools::with_envvar(
-      envvar(),
-      devtools::in_dir(
-        root_dir(web),
-        local({
-          write_makefile(web)
-          on.exit(file.remove("Makefile"), add = TRUE)
+  with_temp_lib(test_make(web))
 
-          res <- system2("make", stdout = TRUE, stderr = TRUE)
-          #writeLines(res, "make.log")
-          expect_null(attr(res, "status"))
+  # Packages are not installed after running
+  expect_false(any((web %>% names) %in% rownames(installed.packages())))
 
-          expect_true(any(grepl("unchanged", res)))
-          for (n in names(web)) {
-            expect_true(any(grepl(sprintf("check_up.*%s", n), res)), info = n)
-            expect_true(any(grepl(sprintf("%s not installed", n), res)), info = n)
-            expect_true(any(grepl(sprintf("%s updated", n), res)), info = n)
-          }
-        })
-      )
-    )
-  )
+  test_make(web, lib_dir = "unrelated")
 
   # Packages are not installed after running
   expect_false(any((web %>% names) %in% rownames(installed.packages())))
