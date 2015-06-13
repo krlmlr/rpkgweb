@@ -5,10 +5,10 @@ test_that("creation of Makefile", {
 
   skip_if_packages_installed(web)
 
-  devtools::in_dir(
-    root_dir(web),
-    devtools::with_envvar(
-      envvar(),
+  devtools::with_envvar(
+    envvar(),
+    devtools::in_dir(
+      root_dir(web),
       local({
         write_makefile(web)
         on.exit(file.remove("Makefile"), add = TRUE)
@@ -34,10 +34,10 @@ test_that("execution of Makefile", {
   skip_if_packages_installed(web)
 
   with_temp_lib(
-    devtools::in_dir(
-      root_dir(web),
-      devtools::with_envvar(
-        envvar(),
+    devtools::with_envvar(
+      envvar(),
+      devtools::in_dir(
+        root_dir(web),
         local({
           write_makefile(web)
           on.exit(file.remove("Makefile"), add = TRUE)
