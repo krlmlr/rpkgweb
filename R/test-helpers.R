@@ -50,8 +50,6 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL) {
         expect_message(write_makefile(web, target_dir = target_dir, lib_dir = lib_dir),
                        "unchanged")
 
-        browser()
-
         res <- system2("make", make_extra_commands, stdout = TRUE, stderr = TRUE)
         #writeLines(res, "make.log")
         expect_null(attr(res, "status"))
