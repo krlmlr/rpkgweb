@@ -13,11 +13,7 @@
 makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
   web <- as.rpkgweb(web)
 
-  if (is.null(target_dir)) {
-    target_dir <- root_dir(web)
-  } else {
-    target_dir <- normalize_path(target_dir)
-  }
+  target_dir <- get_target_dir(web, target_dir)
 
   target_dir_rel <- R.utils::getRelativePath(target_dir, root_dir(web))
   if (grepl("^[.][.]", target_dir_rel)) {

@@ -25,3 +25,11 @@ write_makefile <- function(web = rpkgweb(), target_dir = NULL) {
     message("Contents of ", makefile_name, " unchanged.")
   }
 }
+
+get_target_dir <- function(web, target_dir) {
+  if (is.null(target_dir)) {
+    root_dir(web)
+  } else {
+    normalize_path(target_dir)
+  }
+}
