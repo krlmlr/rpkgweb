@@ -10,8 +10,14 @@ test_that("empty web", {
 
   write_makefile(web)
 
-  devtools::in_dir(tmp_dir, {
-    res <- system2("make", "-n", stdout = TRUE, stderr = TRUE)
-    expect_null(attr(res, "status"))
-  })
+  devtools::in_dir(
+    tmp_dir,
+    devtools::with_envvar(
+      envvar(),
+      local({
+        res <- system2("make", "-n", stdout = TRUE, stderr = TRUE)
+        expect_null(attr(res, "status"))
+      })
+    )
+  )
 })
