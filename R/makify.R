@@ -34,12 +34,14 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
   check_log_path <- . %>% sprintf("%s.Rcheck", .) %>% file.path(check_dir, ., "00check.log")
   code_desc_path <- . %>% file.path(root_dir_rel, ., "DESCRIPTION")
 
+  pkg_name <- "$(patsubst %/,%,$(dir $<))"
+
   check_dir_create_call <-
     "dir.create('{{{ check_dir }}}', showWarnings = FALSE, recursive = TRUE)" %>%
     whisker::whisker.render()
 
   run_check_call <-
-    "devtools::check('$(patsubst %/,%,$(dir $<))', cleanup = FALSE, check_dir = '{{{ check_dir }}}')" %>%
+    "devtools::check('{{{ pkg_name }}}', cleanup = FALSE, check_dir = '{{{ check_dir }}}')" %>%
     whisker::whisker.render()
   # End local definitions
 
@@ -68,7 +70,7 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
               "write_makefile(web = '${RPKGWEB_ROOT_DIR}', target_dir='.')" %>%
                 .rpkgweb_qualify() %>% Rscript_call()) +
     make_rule(lib_desc_path("%"), code_desc_path("%"),
-              "check_up('$(patsubst %/,%,$(dir $<))', web = '${RPKGWEB_ROOT_DIR}')" %>%
+              "check_up('{{{ pkg_name }}}', web = '${RPKGWEB_ROOT_DIR}')" %>%
                 .rpkgweb_qualify() %>% Rscript_call()) +
     make_rule(check_log_path("%"), c(code_desc_path("%"), lib_desc_path("%")),
               paste(check_dir_create_call, run_check_call, sep = "; ") %>%
