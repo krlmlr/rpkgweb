@@ -1,75 +1,31 @@
 context("make")
 
-test_that("creation of Makefile", {
-  web <- rpkgweb("test_web")
 
-  skip_if_packages_installed(web)
+web <- rpkgweb("test_web")
 
-  devtools::with_envvar(
-    envvar(),
-    devtools::in_dir(
-      root_dir(web),
-      local({
-        for (target_dir in list(NULL, ".", "unrelated")) {
-          write_makefile(web, target_dir = target_dir)
-
-          if (is.null(target_dir)) {
-            makefile_path <- "Makefile"
-            make_extra_commands <- NULL
-          } else {
-            makefile_path <- file.path(target_dir, "Makefile")
-            make_extra_commands <- c("-C", shQuote(target_dir))
-          }
-
-          expect_true(file.exists(makefile_path), info = makefile_path)
-          on.exit(file.remove(makefile_path), add = TRUE)
-
-          expect_message(write_makefile(web, target_dir = target_dir), "unchanged")
-
-          res <- system2("make", c("-n", make_extra_commands), stdout = TRUE, stderr = TRUE)
-          #writeLines(res, "make.log")
-          expect_null(attr(res, "status"),
-                      info = paste(make_extra_commands, collapse = " "))
-
-          expect_true(any(grepl("unchanged", res)))
-          for (n in names(web)) {
-            expect_true(any(grepl(sprintf("check_up.*%s", n), res)), info = n)
-          }
-        }
-      })
-    )
-  )
+test_that("dry run for default Makefile", {
+  test_make(web, dry_run = TRUE)
 })
 
-test_that("execution of Makefile", {
-  web <- rpkgweb("test_web")
+test_that("dry run for Makefile in cwd", {
+  test_make(web, target_dir = ".", dry_run = TRUE)
+})
 
-  skip_if_packages_installed(web)
+test_that("dry run for Makefile in other dir", {
+  test_make(web, target_dir = "unrelated", dry_run = TRUE)
+})
 
-  with_temp_lib(
-    devtools::with_envvar(
-      envvar(),
-      devtools::in_dir(
-        root_dir(web),
-        local({
-          write_makefile(web)
-          on.exit(file.remove("Makefile"), add = TRUE)
+test_that("execution of Makefile for temp lib", {
+  with_temp_lib(test_make(web))
 
-          res <- system2("make", stdout = TRUE, stderr = TRUE)
-          #writeLines(res, "make.log")
-          expect_null(attr(res, "status"))
-
-          expect_true(any(grepl("unchanged", res)))
-          for (n in names(web)) {
-            expect_true(any(grepl(sprintf("check_up.*%s", n), res)), info = n)
-            expect_true(any(grepl(sprintf("%s not installed", n), res)), info = n)
-            expect_true(any(grepl(sprintf("%s updated", n), res)), info = n)
-          }
-        })
-      )
-    )
-  )
-
-  # Packages are not installed after running
+    # Packages are not installed after running
   expect_false(any((web %>% names) %in% rownames(installed.packages())))
+})
+
+test_that("execution of Makefile for other lib", {
+  test_make(web, lib_dir = "unrelated")
+})
+
+test_that("execution of Makefile for different target_dir and other lib", {
+  test_make(web, target_dir = "unrelated", lib_dir = "unrelated")
 })

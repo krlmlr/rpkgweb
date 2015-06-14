@@ -7,14 +7,14 @@
 #' @importFrom magrittr %>%
 #' @importFrom MakefileR makefile
 #' @export
-write_makefile <- function(web = rpkgweb(), target_dir = NULL) {
+write_makefile <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
   web <- as.rpkgweb(web)
 
   target_dir <- get_target_dir(web, target_dir)
 
   makefile_text <-
     web %>%
-    makify(target_dir = target_dir) %>%
+    makify(target_dir = target_dir, lib_dir = lib_dir) %>%
     makefile %>%
     format
 
