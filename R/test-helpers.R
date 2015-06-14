@@ -72,6 +72,8 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
     )
   )
 
-  # Packages are not installed after running
-  expect_false(any((web %>% names) %in% rownames(installed.packages())))
+  if (!is.null(lib_dir) || dry_run) {
+    # Packages are not installed after running
+    expect_false(any((web %>% names) %in% rownames(installed.packages())))
+  }
 }

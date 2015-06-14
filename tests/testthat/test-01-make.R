@@ -17,6 +17,9 @@ test_that("dry run for Makefile in other dir", {
 
 test_that("execution of Makefile for temp lib", {
   with_temp_lib(test_make(web))
+
+    # Packages are not installed after running
+  expect_false(any((web %>% names) %in% rownames(installed.packages())))
 })
 
 test_that("execution of Makefile for other lib", {
