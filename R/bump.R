@@ -4,8 +4,8 @@
 #' in the DESCRIPTION file of a package.
 #'
 #' @inheritParams devtools::install
-#' @inheritParams check_up
 #' @param component The position of the version to increase, starting at 1.
+#' @param format The format of the version number, e.g., \code{"0.0-0"}
 #'
 #' @importFrom magrittr %>% extract
 #' @importFrom devtools as.package

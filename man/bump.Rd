@@ -11,6 +11,8 @@ bump(pkg = ".", component = 2L, format = "0.0-0")
 \code{\link{as.package}} for more information}
 
 \item{component}{The position of the version to increase, starting at 1.}
+
+\item{format}{The format of the version number, e.g., \code{"0.0-0"}}
 }
 \description{
 This function increases the given component of the version number
