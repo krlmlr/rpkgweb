@@ -24,6 +24,8 @@ envvar <- function() {
 }
 
 test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
+  skip_if_packages_installed(web)
+
   make_extra_commands <- NULL
 
   if (is.null(target_dir)) {
@@ -69,4 +71,7 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
       })
     )
   )
+
+  # Packages are not installed after running
+  expect_false(any((web %>% names) %in% rownames(installed.packages())))
 }
