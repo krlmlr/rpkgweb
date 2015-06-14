@@ -12,6 +12,9 @@
 #'   is already up to date, or an error if there was a failure
 #'
 #' @param pkg_name Name of the package, \emph{not} the path!
+#' @param web A package web, coerced using \code{\link{as.rpkgweb}}
+#' @param quiet If \code{TRUE} suppresses output
+#'
 #' @importFrom magrittr %>%
 #' @importFrom devtools as.package
 #' @export

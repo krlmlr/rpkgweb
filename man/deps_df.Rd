@@ -6,6 +6,9 @@
 \usage{
 deps_df(web = rpkgweb())
 }
+\arguments{
+\item{web}{A package web, coerced using \code{\link{as.rpkgweb}}}
+}
 \description{
 This function computes all dependencies (internal and external) in a
 package web and returns the information as a data frame.

@@ -8,6 +8,10 @@ check_up(pkg_name, web = rpkgweb(), quiet = FALSE)
 }
 \arguments{
 \item{pkg_name}{Name of the package, \emph{not} the path!}
+
+\item{web}{A package web, coerced using \code{\link{as.rpkgweb}}}
+
+\item{quiet}{If \code{TRUE} suppresses output}
 }
 \value{
 \code{TRUE} if package has been updated, \code{FALSE} if the package
