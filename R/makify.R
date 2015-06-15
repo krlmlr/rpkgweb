@@ -71,14 +71,18 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
     ) +
     make_group(
       make_comment("Package library"),
-      make_def("R_LIBS", lib_dir),
-      make_def("R_LIBS_ARG", lib_dir_arg)
+      make_def("RPKGWEB_LIB", lib_dir),
+      make_def("RPKGWEB_LIB_ARG", lib_dir_arg)
     ) +
     (
       if (lib_export) {
-        make_text("export R_LIBS")
+        make_group(
+          make_comment("prepend to R_LIBS"),
+          make_text(sprintf("R_LIBS::=%s:${R_LIBS}", lib_dir)),
+          make_text("export R_LIBS")
+        )
       } else {
-        make_comment("don't re-export R_LIBS")
+        make_comment("don't re-export RPKGWEB_LIB")
       }
     ) +
     make_group(
@@ -90,7 +94,7 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
     make_rule(".FORCE") +
     make_rule(
       "Makefile", c("${RPKGWEB_ROOT_DIR}", web %>% names %>% code_desc_path),
-      r("{{{ rpkgweb_qualify }}}write_makefile(web = '${RPKGWEB_ROOT_DIR}', target_dir='.', lib_dir=${R_LIBS_ARG})")) +
+      r("{{{ rpkgweb_qualify }}}write_makefile(web = '${RPKGWEB_ROOT_DIR}', target_dir='.', lib_dir=${RPKGWEB_LIB_ARG})")) +
     make_rule(
       "info", ".FORCE",
       r("{{{ rpkgweb_qualify }}}rpkgweb('${RPKGWEB_ROOT_DIR}'")) +
@@ -124,4 +128,4 @@ makify_deps <- function(y) {
   Reduce(c, rules, init = make_group(make_comment("Dependencies")))
 }
 
-lib_desc_path <- . %>% file.path("${R_LIBS}", ., "DESCRIPTION")
+lib_desc_path <- . %>% file.path("${RPKGWEB_LIB}", ., "DESCRIPTION")
