@@ -23,6 +23,8 @@ check_up <- function(pkg_name, web = rpkgweb(), quiet = FALSE) {
 
   if (quiet) message <- function(...) invisible(NULL)
 
+  message("Library paths:\n", paste(.libPaths(), collapse = "\n"))
+
   available <- web[[pkg_name]]
 
   installed <- get_installed(available$package)

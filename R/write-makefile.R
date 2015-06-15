@@ -25,6 +25,7 @@ write_makefile <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
     writeLines(makefile_text, makefile_name)
   } else {
     message("Contents of ", makefile_name, " unchanged.")
+    Sys.setFileTime(makefile_name, Sys.time())
   }
 }
 
