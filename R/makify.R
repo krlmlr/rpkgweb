@@ -89,7 +89,7 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
     ) +
     make_rule(".FORCE") +
     make_rule(
-      "Makefile", ".FORCE",
+      "Makefile", c(root_dir_rel, web %>% names %>% code_desc_path),
       r("{{{ rpkgweb_qualify }}}write_makefile(web = '${RPKGWEB_ROOT_DIR}', target_dir='.', lib_dir=${R_LIBS_ARG})")) +
     make_rule(
       lib_desc_path("%"), code_desc_path("%"),
