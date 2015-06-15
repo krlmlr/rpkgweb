@@ -56,7 +56,7 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
         # Early exit: If we can't load package here, something's really wrong
         # (don't recreate Makefile here)
         Sys.setFileTime(makefile_path, file.info(".")$mtime - 1L)
-        res <- system2("make", "info", stdout = TRUE, stderr = TRUE)
+        res <- system2("make", c("info", make_extra_commands), stdout = TRUE, stderr = TRUE)
         stopifnot(is.null(attr(res, "status")))
 
         expect_message(write_makefile(web, target_dir = target_dir, lib_dir = lib_dir),
