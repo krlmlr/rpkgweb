@@ -77,6 +77,27 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
             expect_true(any(grepl(sprintf("%s updated", n), res)), info = n)
           }
         }
+
+        if (!dry_run) {
+          res <- system2("make", c(".rpkgweb-all-install", make_extra_commands),
+                         stdout = TRUE, stderr = TRUE)
+          #writeLines(res, "make-file.log")
+          stopifnot(is.null(attr(res, "status")))
+          expect_match(grep("^make: ", res, value = TRUE, invert = TRUE),
+                       "^touch -r .* [.]rpkgweb-all-install$")
+          file_time_1 <- file.info(".rpkgweb-all-install")$mtime
+
+          res <- system2("make", c(".rpkgweb-all-install", make_extra_commands),
+                         stdout = TRUE, stderr = TRUE)
+          #writeLines(res, "make-file-2.log")
+          stopifnot(is.null(attr(res, "status")))
+          expect_match(grep("^make: ", res, value = TRUE, invert = TRUE),
+                       "^touch -r .* [.]rpkgweb-all-install$")
+          file_time_2 <- file.info(".rpkgweb-all-install")$mtime
+
+          # Don't update file if nothing new is installed
+          expect_equal(file_time_1, file_time_2)
+        }
       })
     )
   )
