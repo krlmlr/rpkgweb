@@ -24,6 +24,15 @@ envvar <- function() {
 }
 
 test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
+  debug <- TRUE
+  #debug <- FALSE
+  if (!debug) {
+    write_log <- function(...) invisible(NULL)
+  } else {
+    # Don't touch web for testing
+    write_log <- function(text, file) writeLines(text, file.path("..", file))
+  }
+
   skip_if_packages_installed(web)
 
   make_extra_commands <- NULL
