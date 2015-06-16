@@ -83,7 +83,7 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
           make_text("export R_LIBS")
         )
       } else {
-        make_comment("don't re-export RPKGWEB_LIB")
+        make_comment("don't re-export R_LIBS")
       }
     ) +
     make_group(
@@ -95,6 +95,10 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
       make_rule("all", "all-install"),
       make_rule("all-install", "${RPKGWEB_PACKAGES}"),
       make_rule("all-check", "$(RPKGWEB_PACKAGES:%=check-%)")
+    ) +
+    make_group(
+      make_comment("Dummy file rules for interaction with other Makefiles"),
+      make_rule(".rpkgweb-all-install", "all-install", "touch -r ${RPKGWEB_LIB} $@")
     ) +
     make_rule(".FORCE") +
     make_rule(
