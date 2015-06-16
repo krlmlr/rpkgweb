@@ -12,6 +12,9 @@
 #'   is already up to date, or an error if there was a failure
 #'
 #' @param pkg_name Name of the package, \emph{not} the path!
+#' @param web A package web, coerced using \code{\link{as.rpkgweb}}
+#' @param quiet If \code{TRUE} suppresses output
+#'
 #' @importFrom magrittr %>%
 #' @importFrom devtools as.package
 #' @export
@@ -20,7 +23,9 @@ check_up <- function(pkg_name, web = rpkgweb(), quiet = FALSE) {
 
   if (quiet) message <- function(...) invisible(NULL)
 
-  available <- web$packages[[pkg_name]]
+  message("Library paths:\n", paste(.libPaths(), collapse = "\n"))
+
+  available <- web[[pkg_name]]
 
   installed <- get_installed(available$package)
   installed_version <- get_version(installed)

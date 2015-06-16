@@ -3,23 +3,29 @@
 #' This function computes all dependencies (internal and external) in a
 #' package web and returns the information as a data frame.
 #'
+#' @inheritParams check_up
+#'
 #' @importFrom devtools parse_deps
 #' @export
 deps_df <- function(web = rpkgweb()) {
   web <- as.rpkgweb(web)
 
   all_deps <-
-    web$packages %>%
+    web %>%
     lapply(names) %>%
     lapply(intersect, c("depends", "imports", "suggests")) %>%
-    mapply(web$packages, FUN = function(names, webitem) {
+    mapply(web, FUN = function(names, webitem) {
       if (length(names) > 0) {
         data.frame(package = webitem$package, dep_type = names,
                    deps = unname(unlist(webitem[names])),
                    stringsAsFactors = FALSE)
       }
     },
-    SIMPLIFY = FALSE)
+    SIMPLIFY = FALSE) %>%
+    c(list(data.frame(
+      package = character(),
+      dep_type = character(),
+      deps = character())))
 
   all_deps_df <- do.call(rbind, all_deps)
 
@@ -37,6 +43,10 @@ deps_df <- function(web = rpkgweb()) {
       }
     }
   ) %>%
+    c(list(data.frame(
+      package = character(),
+      dep_type = character(),
+      dep_package = character()))) %>%
     do.call(rbind, .) %>%
     transform(internal = dep_package %in% names(all_deps)) %>%
     prepend_class("deps_df")

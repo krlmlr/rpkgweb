@@ -1,11 +1,12 @@
 Package: rpkgweb
-Title: Managing webs of R packages
-Version: 0.0-1
+Title: Managing Webs of R Packages
+Version: 0.0-2
 Authors@R: as.person("Kirill Müller <krlmlr+r@mailbox.org> [aut, cre]")
 Description: This package helps managing projects that consist of multiple
   individual R packages.
-Depends: R (>= 3.2.0)
-Imports: devtools, MakefileR (>= 0.3-3), magrittr, igraph
+Depends: R (>= 3.1.3)
+Imports: devtools, MakefileR (>= 0.3-3), magrittr, igraph, R.utils,
+  whisker
 License: GPL-3
 LazyData: true
 Encoding: UTF-8

@@ -59,6 +59,8 @@ systems and continuous integration)
 
 - `modules`
 
+- `memoise`
+
 - R blog
 
 
@@ -70,7 +72,7 @@ systems and continuous integration)
 
 - Reproducibility of results
 
-- Integration with existing infrastructure
+- Integration with existing infrastructure and workflows
 
 - Interactive processing
 
@@ -116,6 +118,7 @@ systems and continuous integration)
 - Raw data
     - As packages
     - `use_data()`
+        - own wrapper function
 
 - Validation, checking assumptions
     - Test, perhaps in a child package
@@ -141,6 +144,7 @@ systems and continuous integration)
         - Caution: This fails `check` -- no `DESCRIPTION` found
             - Solution: Check `R_TESTS` environment variable, don't build if
               not empty
+            - need own wrapper function for `build_vignettes`
 
 
 ## Workflow
@@ -215,8 +219,18 @@ Reiterate as necessary!
 
 ### Parallelization: `make -j ...`
 
-
 ## Example: Calibrating a survey
+
+
+## Other uses
+
+- Package development
+
+
+## Open questions
+
+- Parametrized builds?
+    - More than one `Makefile`
 
 
 ## Summary and outlook
@@ -227,4 +241,3 @@ Reiterate as necessary!
 
 - Constantly switching between `R` and `tests/testthat`
     - `use_testthat_symlink`
-    - Own testing infrastructure
