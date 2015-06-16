@@ -83,7 +83,7 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
           make_text("export R_LIBS")
         )
       } else {
-        make_comment("don't re-export RPKGWEB_LIB")
+        make_comment("don't re-export R_LIBS")
       }
     ) +
     make_group(
