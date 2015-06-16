@@ -26,6 +26,11 @@ test_that("execution of Makefile for other lib", {
   test_make(web, lib_dir = "unrelated")
 })
 
-test_that("execution of Makefile for different target_dir and other lib", {
+test_that("execution of Makefile for different target_dir and lib in target_dir", {
+  # Not recommended!
   test_make(web, target_dir = "unrelated", lib_dir = "unrelated")
+})
+
+test_that("execution of Makefile for different target_dir and other lib", {
+  test_make(web, target_dir = "unrelated", lib_dir = "unrelated/lib")
 })
