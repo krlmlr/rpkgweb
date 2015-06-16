@@ -105,6 +105,11 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
           file_time_1 <- file.info(all_install_file)$mtime
           expect_true(!is.na(file_time_1))
 
+          res <- system2("make", c("Makefile", make_extra_commands),
+                         stdout = TRUE, stderr = TRUE)
+          write_log(res, "make-make.log")
+          stopifnot(is.null(attr(res, "status")))
+
           res <- system2("make", c(".rpkgweb-all-install", make_extra_commands),
                          stdout = TRUE, stderr = TRUE)
           write_log(res, "make-file-2.log")
