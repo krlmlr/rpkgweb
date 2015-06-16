@@ -1,6 +1,6 @@
 Package: rpkgweb
 Title: Managing Webs of R Packages
-Version: 0.0-2
+Version: 0.0-3
 Authors@R: as.person("Kirill Müller <krlmlr+r@mailbox.org> [aut, cre]")
 Description: This package helps managing projects that consist of multiple
   individual R packages.
