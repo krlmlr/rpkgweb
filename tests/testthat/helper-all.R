@@ -120,7 +120,9 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
           expect_true(!is.na(file_time_2))
 
           # Don't update file if nothing new is installed
-          expect_equal(file_time_1, file_time_2)
+          if (is.null(target_dir) || is.null(lib_dir) || target_dir != lib_dir) {
+            expect_equal(file_time_1, file_time_2)
+          }
         }
       })
     )
