@@ -60,16 +60,19 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
     devtools::in_dir(
       root_dir(web),
       local({
+        write_log(.libPaths(), "libpaths.log")
+
         write_makefile(web, target_dir = target_dir, lib_dir = lib_dir)
         expect_true(file.exists(makefile_path), info = makefile_path)
-        on.exit(file.remove(makefile_path), add = TRUE)
-        #writeLines(.libPaths(), "libpaths.log")
+        if (!debug) {
+          on.exit(file.remove(makefile_path), add = TRUE)
+        }
 
         # Early exit: If we can't load package here, something's really wrong
         # (don't recreate Makefile here)
         Sys.setFileTime(makefile_path, file.info(".")$mtime - 1L)
         res <- system2("make", c("info", make_extra_commands), stdout = TRUE, stderr = TRUE)
-        #writeLines(res, "make-info.log")
+        write_log(res, "make-info.log")
         stopifnot(is.null(attr(res, "status")))
 
         expect_message(write_makefile(web, target_dir = target_dir, lib_dir = lib_dir),
@@ -77,7 +80,7 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
 
         Sys.setFileTime(makefile_path, file.info(".")$mtime - 1L)
         res <- system2("make", make_extra_commands, stdout = TRUE, stderr = TRUE)
-        #writeLines(res, "make.log")
+        write_log(res, "make.log")
         expect_null(attr(res, "status"))
 
         expect_true(any(grepl("unchanged", res)))
@@ -95,7 +98,7 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
 
           res <- system2("make", c(".rpkgweb-all-install", make_extra_commands),
                          stdout = TRUE, stderr = TRUE)
-          #writeLines(res, "make-file.log")
+          write_log(res, "make-file.log")
           stopifnot(is.null(attr(res, "status")))
           expect_match(grep("^make: ", res, value = TRUE, invert = TRUE),
                        "^touch -r .* [.]rpkgweb-all-install$")
@@ -104,7 +107,7 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
 
           res <- system2("make", c(".rpkgweb-all-install", make_extra_commands),
                          stdout = TRUE, stderr = TRUE)
-          #writeLines(res, "make-file-2.log")
+          write_log(res, "make-file-2.log")
           stopifnot(is.null(attr(res, "status")))
           expect_match(grep("^make: ", res, value = TRUE, invert = TRUE),
                        "^touch -r .* [.]rpkgweb-all-install$")
