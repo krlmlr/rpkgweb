@@ -94,7 +94,8 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
       make_comment("Universal targets"),
       make_rule("all", "all-install"),
       make_rule("all-install", "${RPKGWEB_PACKAGES}"),
-      make_rule("all-check", "$(RPKGWEB_PACKAGES:%=check-%)")
+      make_rule("all-check", "$(RPKGWEB_PACKAGES:%=check-%)"),
+      make_rule(".rpkgweb-%", "%", "touch $@")
     ) +
     make_rule(".FORCE") +
     make_rule(
