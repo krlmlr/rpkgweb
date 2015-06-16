@@ -244,6 +244,12 @@ Reiterate as necessary!
     - More than one `Makefile`
 
 
+## Limitations
+
+- Whitespace in paths
+    - Don't use!
+
+
 ## Summary and outlook
 
 - Package generation must be cheap -- `mason`
