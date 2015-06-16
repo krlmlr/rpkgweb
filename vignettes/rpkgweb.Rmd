@@ -9,6 +9,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r}
+library(knitcitations)
+```
+
 Being able to generate all figures and plots for an academic submission
 from raw data can be considered the "gold standard" of reproducible
 research.[^1] By automating the process, it is possible to easily verify
@@ -53,6 +57,8 @@ systems and continuous integration)
 
 ## Related work
 
+The `ProjectTemplate` package `r citep(citation("ProjectTemplate"))`
+
 - `ProjectTemplate`
 
 - `mvbutils`
@@ -83,6 +89,8 @@ systems and continuous integration)
 - Caching
 
 - Parallelization
+
+- Conflict resolution
 
 
 ## Framework
@@ -225,6 +233,9 @@ Reiterate as necessary!
 ## Other uses
 
 - Package development
+
+- Integration with other `Makefile`-s?
+    - dummy file touched when all packages have been installed successfully
 
 
 ## Open questions
