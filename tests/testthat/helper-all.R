@@ -25,7 +25,7 @@ envvar <- function() {
 
 test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
   debug <- TRUE
-  #debug <- FALSE
+  debug <- FALSE
   if (!debug) {
     write_log <- function(...) invisible(NULL)
   } else {
