@@ -42,6 +42,7 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
   check_dir <- "rpkgweb-check"
   check_log_path <- . %>% sprintf("%s.Rcheck", .) %>% file.path(check_dir, ., "00check.log")
   code_desc_path <- . %>% file.path(root_dir_rel, ., "DESCRIPTION")
+  code_desc_path_x <- . %>% sprintf("$(patsubst(%%,${RPKGWEB_ROOT_DIR}/%%/DESCRIPTION,%s))", .)
 
   rpkgweb_qualify <- Sys.getenv("RPKGWEB_QUALIFY", "rpkgweb::")
 
@@ -82,18 +83,26 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
           make_text("export R_LIBS")
         )
       } else {
-        make_comment("don't re-export RPKGWEB_LIB")
+        make_comment("don't re-export R_LIBS")
       }
+    ) +
+    make_group(
+      make_comment("All packages"),
+      make_def("RPKGWEB_PACKAGES", web %>% names %>% paste(collapse = " "))
     ) +
     make_group(
       make_comment("Universal targets"),
       make_rule("all", "all-install"),
-      make_rule("all-install", web %>% names),
-      make_rule("all-check", sprintf("check-%s", web %>% names))
+      make_rule("all-install", "${RPKGWEB_PACKAGES}"),
+      make_rule("all-check", "$(RPKGWEB_PACKAGES:%=check-%)")
+    ) +
+    make_group(
+      make_comment("Dummy file rules for interaction with other Makefiles"),
+      make_rule(".rpkgweb-all-install", "all-install", "touch -r ${RPKGWEB_LIB} $@")
     ) +
     make_rule(".FORCE") +
     make_rule(
-      "Makefile", c("${RPKGWEB_ROOT_DIR}", web %>% names %>% code_desc_path),
+      "Makefile", c("${RPKGWEB_ROOT_DIR}", "${RPKGWEB_PACKAGES}" %>% code_desc_path_x),
       r("{{{ rpkgweb_qualify }}}write_makefile(web = '${RPKGWEB_ROOT_DIR}', target_dir='.', lib_dir=${RPKGWEB_LIB_ARG})")) +
     make_rule(
       "info", ".FORCE",

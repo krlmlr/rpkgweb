@@ -24,15 +24,26 @@ envvar <- function() {
 }
 
 test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
+  debug <- TRUE
+  debug <- FALSE
+  if (!debug) {
+    write_log <- function(...) invisible(NULL)
+  } else {
+    # Don't touch web for testing
+    write_log <- function(text, file) writeLines(text, file.path("..", file))
+  }
+
   skip_if_packages_installed(web)
 
   make_extra_commands <- NULL
 
   if (is.null(target_dir)) {
     makefile_path <- "Makefile"
+    target_dir_local <- "."
   } else {
     makefile_path <- file.path(target_dir, "Makefile")
     make_extra_commands <- c(make_extra_commands, "-C", shQuote(target_dir))
+    target_dir_local <- target_dir
   }
 
   if (!is.null(lib_dir)) {
@@ -49,16 +60,19 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
     devtools::in_dir(
       root_dir(web),
       local({
+        write_log(.libPaths(), "libpaths.log")
+
         write_makefile(web, target_dir = target_dir, lib_dir = lib_dir)
         expect_true(file.exists(makefile_path), info = makefile_path)
-        on.exit(file.remove(makefile_path), add = TRUE)
-        #writeLines(.libPaths(), "libpaths.log")
+        if (!debug) {
+          on.exit(file.remove(makefile_path), add = TRUE)
+        }
 
         # Early exit: If we can't load package here, something's really wrong
         # (don't recreate Makefile here)
         Sys.setFileTime(makefile_path, file.info(".")$mtime - 1L)
         res <- system2("make", c("info", make_extra_commands), stdout = TRUE, stderr = TRUE)
-        #writeLines(res, "make-info.log")
+        write_log(res, "make-info.log")
         stopifnot(is.null(attr(res, "status")))
 
         expect_message(write_makefile(web, target_dir = target_dir, lib_dir = lib_dir),
@@ -66,7 +80,7 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
 
         Sys.setFileTime(makefile_path, file.info(".")$mtime - 1L)
         res <- system2("make", make_extra_commands, stdout = TRUE, stderr = TRUE)
-        #writeLines(res, "make.log")
+        write_log(res, "make.log")
         expect_null(attr(res, "status"))
 
         expect_true(any(grepl("unchanged", res)))
@@ -75,6 +89,39 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
           if (!dry_run) {
             expect_true(any(grepl(sprintf("%s not installed", n), res)), info = n)
             expect_true(any(grepl(sprintf("%s updated", n), res)), info = n)
+          }
+        }
+
+        if (!dry_run) {
+          all_install_file <- file.path(target_dir_local, ".rpkgweb-all-install")
+          on.exit(unlink(all_install_file), add = TRUE)
+
+          res <- system2("make", c(".rpkgweb-all-install", make_extra_commands),
+                         stdout = TRUE, stderr = TRUE)
+          write_log(res, "make-file.log")
+          stopifnot(is.null(attr(res, "status")))
+          expect_match(grep("^make: ", res, value = TRUE, invert = TRUE),
+                       "^touch -r .* [.]rpkgweb-all-install$")
+          file_time_1 <- file.info(all_install_file)$mtime
+          expect_true(!is.na(file_time_1))
+
+          res <- system2("make", c("Makefile", make_extra_commands),
+                         stdout = TRUE, stderr = TRUE)
+          write_log(res, "make-make.log")
+          stopifnot(is.null(attr(res, "status")))
+
+          res <- system2("make", c(".rpkgweb-all-install", make_extra_commands),
+                         stdout = TRUE, stderr = TRUE)
+          write_log(res, "make-file-2.log")
+          stopifnot(is.null(attr(res, "status")))
+          expect_match(grep("^make: ", res, value = TRUE, invert = TRUE),
+                       "^touch -r .* [.]rpkgweb-all-install$")
+          file_time_2 <- file.info(all_install_file)$mtime
+          expect_true(!is.na(file_time_2))
+
+          # Don't update file if nothing new is installed
+          if (is.null(target_dir) || is.null(lib_dir) || target_dir != lib_dir) {
+            expect_equal(file_time_1, file_time_2)
           }
         }
       })
