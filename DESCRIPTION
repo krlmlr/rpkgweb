@@ -12,3 +12,6 @@ LazyData: true
 Encoding: UTF-8
 Suggests: testthat, knitr
 VignetteBuilder: knitr
+GitHub: https://github.com/krlmlr/rpkgweb
+BugReports: https://github.com/krlmlr/rpkgweb/issues
+URL: http://krlmlr.github.io/rpkgweb
