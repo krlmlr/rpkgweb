@@ -1,6 +1,10 @@
 #' Read a package web
 #'
-#' This function reads a web of packages.
+#' An R package web is a collection of R packages stored in the same directory.
+#' These function are related to the S3 class \code{"rpkgweb"}.
+#'
+#' The \code{rpkgweb} function constructs an \code{"rpkgweb"} object
+#' for a given directory.
 #'
 #' @param root_dir The root directory of the package web
 #' @param x An object
@@ -51,10 +55,18 @@ normalize_path <- function(path) {
 }
 
 #' @rdname rpkgweb
+#' @details
+#'   \code{is.rpkgweb} checks if an object is of class \code{"rpkgweb"}.
 #' @export
 is.rpkgweb <- function(x) inherits(x, "rpkgweb")
 
 #' @rdname rpkgweb
+#' @details
+#'   All functions that operate on a package web will call \code{as.rpkgweb} on
+#'   the input. Objects of class \code{"rpkgweb"} are passed through,
+#'   \code{character} values are coerced using the \code{rpkgweb} function
+#'   (i.e., they are interpreted as root path of the package web);
+#'   other inputs will raise an error.
 #' @export
 as.rpkgweb <- function(x) UseMethod("as.rpkgweb", x)
 
@@ -90,7 +102,7 @@ print.rpkgweb <- function(x, ...) {
   cat(paste(format(x), collapse = "\n"), "\n")
 }
 
-#' @details \code{root_dir} returns the root directory of the web.
+#' @details \code{root_dir} returns the root directory of a package web.
 #' @rdname rpkgweb
 #' @export
 root_dir <- function(x) UseMethod("root_dir", x)
