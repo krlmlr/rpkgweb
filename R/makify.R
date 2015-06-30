@@ -36,7 +36,7 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
   r <- function(..., data = parent.frame()) {
     expr <- paste(..., sep = "; ")
     expr <- whisker::whisker.render(expr, data = data)
-    sprintf("Rscript -e \"%s\"", expr)
+    sprintf("Rscript -e \"tryCatch(%s, error = function(e) { message(e$$message, '\\n'); quit('no', 10) })\"", expr)
   }
 
   check_dir <- "rpkgweb-check"
