@@ -1,6 +1,8 @@
-#' Construct a Makefile
+#' Internal: Construct a Makefile
 #'
-#' This function constructs a \code{Makefile} for a package web.
+#' This function constructs a \code{Makefile} object for a package web.
+#' Call the exported \code{\link{write_makefile}} function to
+#' write a \code{Makefile} to the web's root directory.
 #'
 #' @param web The web to construct the \code{Makefile} for
 #' @param target_dir Target directory for \code{Makefile}, default: the web's root
@@ -9,7 +11,6 @@
 #' @return A Makefile
 #'
 #' @importFrom MakefileR make_rule make_def make_group make_comment make_text
-#' @export
 makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
   web <- as.rpkgweb(web)
 
