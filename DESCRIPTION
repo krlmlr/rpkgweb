@@ -10,7 +10,7 @@ Imports: devtools, MakefileR (>= 0.3-3), magrittr, igraph, R.utils,
 License: GPL-3
 LazyData: true
 Encoding: UTF-8
-Suggests: testthat, knitr
+Suggests: testthat, knitr, knitcitations
 VignetteBuilder: knitr
 GitHub: https://github.com/krlmlr/rpkgweb
 BugReports: https://github.com/krlmlr/rpkgweb/issues
