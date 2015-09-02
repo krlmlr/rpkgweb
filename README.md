@@ -2,4 +2,8 @@
 
 R package webs: Reproducible research from raw data.
 
+```{r}
+devtools::install_github(c("krlmlr/MakefileR", "krlmlr/rpkgweb"))
+```
+
 This is work in progress and has not been tested on Windows yet.
