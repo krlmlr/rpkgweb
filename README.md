@@ -2,4 +2,10 @@
 
 R package webs: Reproducible research from raw data.
 
-This is work in progress and has not been tested on Windows yet.
+[useR!2015 poster](http://krlmlr-user15.github.io/poster/rpkgweb.pdf)
+
+```{r}
+devtools::install_github(c("krlmlr/MakefileR", "krlmlr/rpkgweb"))
+```
+
+This is work in progress and has not been tested on Windows yet. Feedback of any kind is welcome.
