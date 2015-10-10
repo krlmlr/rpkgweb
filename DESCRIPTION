@@ -3,15 +3,24 @@ Title: Managing Webs of R Packages
 Version: 0.1
 Authors@R: as.person("Kirill Müller <krlmlr+r@mailbox.org> [aut, cre]")
 Description: This package helps managing projects that consist of
-        multiple individual R packages.
-Depends: R (>= 3.1.3)
-Imports: devtools, MakefileR (>= 0.3-3), magrittr, igraph, R.utils,
-        whisker
+    multiple individual R packages.
+Depends:
+    R (>= 3.1.3)
+Imports:
+    devtools,
+    MakefileR (>= 0.3-3),
+    magrittr,
+    igraph,
+    R.utils,
+    whisker
 License: GPL-3
 LazyData: true
 Encoding: UTF-8
-Suggests: testthat, knitr
+Suggests:
+    testthat,
+    knitr
 VignetteBuilder: knitr
 GitHub: https://github.com/krlmlr/rpkgweb
 BugReports: https://github.com/krlmlr/rpkgweb/issues
 URL: http://krlmlr.github.io/rpkgweb
+RoxygenNote: 4.1.1.9000
