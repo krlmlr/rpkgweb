@@ -1,6 +1,8 @@
-#' Construct a Makefile
+#' Internal: Construct a Makefile
 #'
-#' This function constructs a \code{Makefile} for a package web.
+#' This function constructs a \code{Makefile} object for a package web.
+#' Call the exported \code{\link{write_makefile}} function to
+#' write a \code{Makefile} to the web's root directory.
 #'
 #' @param web The web to construct the \code{Makefile} for
 #' @param target_dir Target directory for \code{Makefile}, default: the web's root
@@ -9,7 +11,6 @@
 #' @return A Makefile
 #'
 #' @importFrom MakefileR make_rule make_def make_group make_comment make_text
-#' @export
 makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
   web <- as.rpkgweb(web)
 
@@ -36,7 +37,7 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
   r <- function(..., data = parent.frame()) {
     expr <- paste(..., sep = "; ")
     expr <- whisker::whisker.render(expr, data = data)
-    sprintf("Rscript -e \"%s\"", expr)
+    sprintf("Rscript -e \"tryCatch({%s}, error = function(e) { message(e$$message, '\\n'); quit('no', 10) })\"", expr)
   }
 
   check_dir <- "rpkgweb-check"
@@ -106,7 +107,7 @@ makify <- function(web = rpkgweb(), target_dir = NULL, lib_dir = NULL) {
       r("{{{ rpkgweb_qualify }}}write_makefile(web = '${RPKGWEB_ROOT_DIR}', target_dir='.', lib_dir=${RPKGWEB_LIB_ARG})")) +
     make_rule(
       "info", ".FORCE",
-      r("{{{ rpkgweb_qualify }}}rpkgweb('${RPKGWEB_ROOT_DIR}'")) +
+      r("{{{ rpkgweb_qualify }}}rpkgweb('${RPKGWEB_ROOT_DIR}')")) +
     make_rule(
       lib_desc_path("%"), code_desc_path("%"),
       r("{{{ rpkgweb_qualify }}}check_up('{{{ pkg_name }}}', web = '${RPKGWEB_ROOT_DIR}')")) +

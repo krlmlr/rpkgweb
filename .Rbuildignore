@@ -2,3 +2,10 @@
 ^\.Rproj\.user$
 ^TODO[.]md$
 ^R/testthat$
+^Makefile$
+^Makefile\.in$
+^makeR$
+^wercker\.yml$
+^_builds$
+^_projects$
+^_steps$
