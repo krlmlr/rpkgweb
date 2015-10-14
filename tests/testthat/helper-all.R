@@ -23,6 +23,23 @@ envvar <- function() {
   ret
 }
 
+make_run_make <- function(dry_run, extra_commands) {
+  eval(bquote(function(args = NULL) {
+    dry_run <- .(dry_run)
+    args <- c(args, .(extra_commands))
+    res <- system2("make", c(args, "-n"), stdout = TRUE, stderr = TRUE)
+    expect_null(attr(res, "status"))
+
+    if (!dry_run) {
+      res2 <- system2("make", args, stdout = TRUE, stderr = TRUE)
+      expect_null(attr(res2, "status"))
+      res <- c(res, res2)
+    }
+
+    res
+  }))
+}
+
 test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
   debug <- TRUE
   debug <- FALSE
@@ -51,9 +68,7 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
     on.exit(unlink(paths_to_remove, recursive = TRUE), add = TRUE)
   }
 
-  if (dry_run) {
-    make_extra_commands <- c(make_extra_commands, "-n")
-  }
+  run_make <- make_run_make(dry_run, make_extra_commands)
 
   devtools::with_envvar(
     envvar(),
@@ -71,7 +86,7 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
         # Early exit: If we can't load package here, something's really wrong
         # (don't recreate Makefile here)
         Sys.setFileTime(makefile_path, file.info(".")$mtime - 1L)
-        res <- system2("make", c("info", make_extra_commands), stdout = TRUE, stderr = TRUE)
+        res <- run_make("info")
         write_log(res, "make-info.log")
         stopifnot(is.null(attr(res, "status")))
 
@@ -79,9 +94,8 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
                        "unchanged")
 
         Sys.setFileTime(makefile_path, file.info(".")$mtime - 1L)
-        res <- system2("make", make_extra_commands, stdout = TRUE, stderr = TRUE)
+        res <- run_make()
         write_log(res, "make.log")
-        expect_null(attr(res, "status"))
 
         expect_true(any(grepl("unchanged", res)))
         for (n in names(web)) {
@@ -96,8 +110,7 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
           all_install_file <- file.path(target_dir_local, ".rpkgweb-all-install")
           on.exit(unlink(all_install_file), add = TRUE)
 
-          res <- system2("make", c(".rpkgweb-all-install", make_extra_commands),
-                         stdout = TRUE, stderr = TRUE)
+          res <- run_make(".rpkgweb-all-install")
           write_log(res, "make-file.log")
           stopifnot(is.null(attr(res, "status")))
           expect_match(grep("^make: ", res, value = TRUE, invert = TRUE),
@@ -105,13 +118,11 @@ test_make <- function(web, target_dir = NULL, lib_dir = NULL, dry_run = FALSE) {
           file_time_1 <- file.info(all_install_file)$mtime
           expect_true(!is.na(file_time_1))
 
-          res <- system2("make", c("Makefile", make_extra_commands),
-                         stdout = TRUE, stderr = TRUE)
+          res <- run_make("Makefile")
           write_log(res, "make-make.log")
           stopifnot(is.null(attr(res, "status")))
 
-          res <- system2("make", c(".rpkgweb-all-install", make_extra_commands),
-                         stdout = TRUE, stderr = TRUE)
+          res <- run_make(".rpkgweb-all-install")
           write_log(res, "make-file-2.log")
           stopifnot(is.null(attr(res, "status")))
           expect_match(grep("^make: ", res, value = TRUE, invert = TRUE),
